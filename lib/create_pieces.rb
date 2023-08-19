@@ -84,8 +84,8 @@ class CreatePieces
 
   def bishops(first_square, second_square)
     bishops = {}
-    bishops[:queen1] = bishop(first_square)
-    bishops[:queen1] = bishop(second_square)
+    bishops[:bishop1] = bishop(first_square)
+    bishops[:bishop2] = bishop(second_square)
     bishops
   end
 
