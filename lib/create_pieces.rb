@@ -48,7 +48,7 @@ class CreatePieces
     i = 1
 
     board[row_index].each do |position|
-      pawn = ":pawn#{i}"
+      pawn = "pawn#{i}"
       i += 1
       pawns[pawn.to_sym] = pawn(position, color)
     end
