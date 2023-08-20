@@ -21,6 +21,7 @@ class Pawn
     destination_coordinate = [row_index(destination), column_index(destination)]
 
     if pontecial_moves.any? { |arr| arr == destination_coordinate }
+      @first_move = false
       @position = destination
     else
       false
@@ -41,21 +42,13 @@ class Pawn
   end
 
   def white(moves, row, column)
-    if first_move == true
-      moves << [row - 2, column]
-      @first_move = false
-    end
-
+    moves << [row - 2, column] if first_move == true
     moves << [row - 1, column]
     moves
   end
 
   def black(moves, row, column)
-    if first_move == true
-      moves << [row + 2, column]
-      @first_move = false
-    end
-
+    moves << [row + 2, column] if first_move == true
     moves << [row + 1, column]
     moves
   end
