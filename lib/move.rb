@@ -14,6 +14,8 @@ class Move
   def make_move(move)
     move_arr = move.split(' ')
     positions = positions_hash
+    return false if check_before_move(positions, move_arr)
+
     if pieces[positions[move_arr.first.to_sym]].change_position(move_arr.last) == false
       false
     else
@@ -32,5 +34,9 @@ class Move
     end
 
     positions
+  end
+
+  def check_before_move(positions, move_arr)
+    positions.include?(move_arr.first.to_sym) == false || move_arr.uniq.length == 1
   end
 end
