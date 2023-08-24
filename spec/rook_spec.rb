@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/rook'
+require_relative '../lib/create_pieces'
 
 describe Rook do
   describe '#change_position' do
@@ -19,14 +20,16 @@ describe Rook do
 
     context 'when a player makes a move' do
       it 'changes position' do
-        rook.change_position('d1')
+        pos_on_way = []
+        rook.change_position('d1', pos_on_way)
         expect(rook.position).to eq('d1')
       end
     end
 
     context 'when a player makes an illegal move' do
       it 'returns false' do
-        expect(rook.change_position('h7')).to be(false)
+        pos_on_way = ['b1']
+        expect(rook.change_position('g1', pos_on_way)).to be(false)
       end
     end
   end
