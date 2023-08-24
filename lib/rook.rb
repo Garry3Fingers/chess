@@ -14,11 +14,11 @@ class Rook
     @board = board
   end
 
-  def change_position(destination)
+  def change_position(destination, positions)
     pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
     destination_coordinate = [row_index(destination), column_index(destination)]
 
-    if pontecial_moves.any? { |arr| arr == destination_coordinate }
+    if check_postions(pontecial_moves, destination_coordinate) && check_pieces(destination, positions)
       @position = destination
     else
       false
@@ -47,5 +47,35 @@ class Rook
     (column - 1).downto(0) { |num| moves << [row, num] }
 
     moves
+  end
+
+  def filter_positions(move, positions)
+    if position[0] == move[0]
+      positions.keep_if { |pos| pos[0] == position[0] }
+    else
+      positions.keep_if { |pos| /[a-h]#{move[1]}/.match?(pos) }
+    end
+  end
+
+  def displacing_positions(move, positions)
+    if position < move
+      positions.keep_if { |pos| pos > position && pos < move }
+    else
+      positions.keep_if { |pos| pos < position && pos > move }
+    end
+  end
+
+  def check_pieces(move, positions)
+    positions = filter_positions(move, positions)
+
+    way_pos = displacing_positions(move, positions)
+
+    return false unless way_pos.empty?
+
+    true
+  end
+
+  def check_postions(pontecial_moves, destination_coordinate)
+    pontecial_moves.any? { |arr| arr == destination_coordinate }
   end
 end
