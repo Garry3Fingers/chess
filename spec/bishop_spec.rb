@@ -15,18 +15,20 @@ describe Bishop do
       %w[a1 b1 c1 d1 e1 f1 g1 h1]
     ]
 
-    subject(:bishop) { described_class.new('d5', board) }
+    subject(:bishop) { described_class.new('d4', board) }
 
     context 'when a player makes a move' do
       it 'changes position' do
-        bishop.change_position('g8')
-        expect(bishop.position).to eq('g8')
+        pos_on_way = ['c5']
+        bishop.change_position('g7', pos_on_way)
+        expect(bishop.position).to eq('g7')
       end
     end
 
     context 'when a player makes an illegal move' do
       it 'returns false' do
-        expect(bishop.change_position('c5')).to be(false)
+        pos_on_way = %w[e5 f6]
+        expect(bishop.change_position('g7', pos_on_way)).to be(false)
       end
     end
   end
