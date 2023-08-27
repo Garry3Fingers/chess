@@ -44,12 +44,11 @@ module ValidateBishopMove
   end
 
   def displacing_positions(move, check_pos)
-    case move
-    when move[1] > position[1] && move[0] > position[0]
+    if move[1] > position[1] && move[0] > position[0]
       check_top_right_diagonal(move, check_pos)
-    when move[1] > position[1] && move[0] < position[0]
+    elsif move[1] > position[1] && move[0] < position[0]
       check_top_left_diagonal(move, check_pos)
-    when move[1] < position[1] && move[0] > position[0]
+    elsif move[1] < position[1] && move[0] > position[0]
       check_bottom_right_diagnoal(move, check_pos)
     else
       check_bottom_left_diagnoal(move, check_pos)
