@@ -19,7 +19,7 @@ class Bishop
   include ValidateBishopMove
 
   def change_position(destination, positions)
-    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
+    pontecial_moves = add_bishop_potencial_moves(row_index(position), column_index(position))
     destination_coordinate = [row_index(destination), column_index(destination)]
 
     if check_bishop_postions(pontecial_moves, destination_coordinate) && check_bishop_path(destination, positions)

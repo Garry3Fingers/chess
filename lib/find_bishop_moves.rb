@@ -39,7 +39,7 @@ module FindBishopMoves
     end
   end
 
-  def add_potencial_moves(row, column)
+  def add_bishop_potencial_moves(row, column)
     moves = []
     moves = first_diagonal(moves, row + 1, column + 1)
     moves = second_diagonal(moves, row + 1, column - 1)
