@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This module finds and checks the potencial move of the bishop piece.
-# Key method: #check_bishop_postions.
+# Key method: #check_bishop_postions and add_potencial_moves.
 module FindBishopMoves
   def first_diagonal(moves, row, column)
     if row <= 7 && column <= 7
