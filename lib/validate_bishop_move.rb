@@ -43,7 +43,7 @@ module ValidateBishopMove
     check_pos
   end
 
-  def displacing_positions(move, check_pos)
+  def blocking_pos(move, check_pos)
     if move[1] > position[1] && move[0] > position[0]
       check_top_right_diagonal(move, check_pos)
     elsif move[1] > position[1] && move[0] < position[0]
@@ -58,7 +58,7 @@ module ValidateBishopMove
   def check_bishop_path(move, positions)
     check_pos = []
 
-    check_pos = displacing_positions(move, check_pos)
+    check_pos = blocking_pos(move, check_pos)
 
     way_pos = positions.keep_if { |pos| check_pos.include?(pos) }
     return false unless way_pos.empty?
