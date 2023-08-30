@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'coordinate_board'
+require_relative 'find_bishop_moves'
+require_relative 'find_rook_moves'
+require_relative 'validate_bishop_move'
+require_relative 'validate_rook_move'
 
 # This class represents a queen piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
@@ -14,11 +17,13 @@ class Queen
     @board = board
   end
 
-  def change_position(destination)
-    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
-    destination_coordinate = [row_index(destination), column_index(destination)]
+  include FindBishopMoves
+  include FindRookMoves
+  include ValidateBishopMove
+  include ValidateRookMove
 
-    if pontecial_moves.any? { |arr| arr == destination_coordinate }
+  def change_position(destination, positions)
+    if check_queen_positions(destination) && check_queen_path(destination, positions)
       @position = destination
     else
       false
@@ -38,57 +43,23 @@ class Queen
     end
   end
 
-  def first_diagonal(moves, row, column)
-    if row <= 7 && column <= 7
-      moves << [row, column]
-      first_diagonal(moves, row + 1, column + 1)
-    else
-      moves
-    end
-  end
-
-  def second_diagonal(moves, row, column)
-    if row <= 7 && column >= 0
-      moves << [row, column]
-      second_diagonal(moves, row + 1, column - 1)
-    else
-      moves
-    end
-  end
-
-  def third_diagonal(moves, row, column)
-    if row >= 0 && column <= 7
-      moves << [row, column]
-      third_diagonal(moves, row - 1, column + 1)
-    else
-      moves
-    end
-  end
-
-  def four_diagonal(moves, row, column)
-    if row >= 0 && column >= 0
-      moves << [row, column]
-      four_diagonal(moves, row - 1, column - 1)
-    else
-      moves
-    end
-  end
-
-  def lines(moves, row, column)
-    (row + 1).upto(7) { |num| moves << [num, column] }
-    (row - 1).downto(0) { |num| moves << [num, column] }
-    (column + 1).upto(7) { |num| moves << [row, num] }
-    (column - 1).downto(0) { |num| moves << [row, num] }
-
-    moves
-  end
-
   def add_potencial_moves(row, column)
-    moves = []
-    moves = first_diagonal(moves, row + 1, column + 1)
-    moves = second_diagonal(moves, row + 1, column - 1)
-    moves = third_diagonal(moves, row - 1, column + 1)
-    moves = four_diagonal(moves, row - 1, column - 1)
-    lines(moves, row, column)
+    rook_moves = add_rook_potencial_moves(row, column)
+    bishop_moves = add_bishop_potencial_moves(row, column)
+    rook_moves + bishop_moves
+  end
+
+  def check_queen_positions(destination)
+    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
+    destination_coordinate = [row_index(destination), column_index(destination)]
+    pontecial_moves.any? { |arr| arr == destination_coordinate }
+  end
+
+  def check_queen_path(move, positions)
+    if move[0] == position[0] || move[1] == position[1]
+      check_rook_path(move, positions)
+    else
+      check_bishop_path(move, positions)
+    end
   end
 end
