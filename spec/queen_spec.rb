@@ -15,18 +15,20 @@ describe Queen do
       %w[a1 b1 c1 d1 e1 f1 g1 h1]
     ]
 
-    subject(:queen) { described_class.new('d8', board) }
+    subject(:queen) { described_class.new('d4', board) }
 
     context 'when a player makes a move' do
       it 'changes position' do
-        queen.change_position('f6')
-        expect(queen.position).to eq('f6')
+        pos = %w[f5 d7]
+        queen.change_position('h8', pos)
+        expect(queen.position).to eq('h8')
       end
     end
 
     context 'when a player makes an illegal move' do
       it 'returns false' do
-        expect(queen.change_position('a7')).to be(false)
+        pos = %w[e5 g4]
+        expect(queen.change_position('h4', pos)).to be(false)
       end
     end
   end
