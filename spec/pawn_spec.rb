@@ -19,20 +19,23 @@ describe Pawn do
 
     context 'when a player makes a move' do
       it 'changes position' do
-        pawn.change_position('f3')
+        pos = []
+        pawn.change_position('f3', pos)
         expect(pawn.position).to eq('f3')
       end
     end
 
     context 'when a player makes an illegal move' do
       it 'returns false' do
-        expect(pawn.change_position('e2')).to be(false)
+        pos = ['f3']
+        expect(pawn.change_position('f3', pos)).to be(false)
       end
     end
 
     context 'when the pawn makes its first move' do
       it 'can advance two squares along the same file' do
-        pawn.change_position('f4')
+        pos = ['e2']
+        pawn.change_position('f4', pos)
         expect(pawn.position).to eq('f4')
       end
     end
@@ -40,7 +43,16 @@ describe Pawn do
     context 'when it\'s not the first pawn move' do
       it 'can\'t advance two squares along the same file' do
         pawn.instance_variable_set(:@first_move, false)
-        expect(pawn.change_position('f4')).to be(false)
+        pos = ['b2']
+        expect(pawn.change_position('f4', pos)).to be(false)
+      end
+    end
+
+    context 'when a pawn captures an opponent\'s piece on a square diagonally' do
+      it 'can capture' do
+        pos = ['e3']
+        pawn.change_position('e3', pos)
+        expect(pawn.position).to eq('e3')
       end
     end
   end
