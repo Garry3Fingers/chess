@@ -21,10 +21,10 @@ class Round
   def play
     print_board
     puts "\nThe white player makes a move."
-    player_move(input, white_pieces, 'white')
+    player_move(input, white_pieces, black_pieces, 'white')
     print_board
     puts "\nThe black player makes a move."
-    player_move(input, black_pieces, 'black')
+    player_move(input, black_pieces, white_pieces, 'black')
   end
 
   private
@@ -44,18 +44,18 @@ class Round
     display_board.print_board
   end
 
-  def move(pieces, move)
-    Move.new(pieces).make_move(move)
+  def move(pieces, enemy_pieces, move)
+    Move.new(pieces, enemy_pieces).make_move(move)
   end
 
   def display_pos_change(move, color)
     display_move.change_position(move, color)
   end
 
-  def player_move(player_move, pieces, color)
-    if move(pieces, player_move) == false
+  def player_move(player_move, pieces, enemy_pieces, color)
+    if move(pieces, enemy_pieces, player_move) == false
       puts 'You can\'t make an illegal move. Try again!'
-      player_move(input, pieces, color)
+      player_move(input, pieces, enemy_pieces, color)
     else
       display_pos_change(player_move, color)
     end
