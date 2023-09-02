@@ -14,6 +14,12 @@ describe Move do
         move.make_move('a2 a4')
         expect(move.current_player_pieces[:pawn1].position).to eq('a4')
       end
+
+      it 'removes enemy piece from the hash' do
+        move.pieces_other_player[:pawn1].position = 'c3'
+        move.make_move('b1 c3')
+        expect(move.pieces_other_player.key?(:pawn1)).to be(false)
+      end
     end
 
     context 'when a player makes an illegal move' do
