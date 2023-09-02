@@ -19,6 +19,8 @@ class Move
     return false if check_before_move(current_player_pos, move_arr)
     return false if current_player_pos.include?(move_arr.last.to_sym)
     return false if move(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)
+
+    del_piece(move_arr.last.to_sym)
   end
 
   private
@@ -57,5 +59,12 @@ class Move
 
   def move(start_pos, end_pos, player_pos, pos)
     current_player_pieces[player_pos[start_pos]].change_position(end_pos, pos) == false
+  end
+
+  def del_piece(move)
+    positions = positions_hash(pieces_other_player)
+    return unless positions.key?(move)
+
+    pieces_other_player.delete(positions[move])
   end
 end
