@@ -18,14 +18,16 @@ describe Knight do
 
     context 'when a player makes a move' do
       it 'changes position' do
-        knight.change_position('c3')
+        pos = []
+        knight.change_position('c3', pos)
         expect(knight.position).to eq('c3')
       end
     end
 
     context 'when a player makes an illegal move' do
       it 'returns false' do
-        expect(knight.change_position('d8')).to be(false)
+        pos = []
+        expect(knight.change_position('d8', pos)).to be(false)
       end
     end
   end

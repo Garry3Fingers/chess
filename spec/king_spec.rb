@@ -18,14 +18,16 @@ describe King do
 
     context 'when a player makes a move' do
       it 'changes position' do
-        king.change_position('d7')
+        pos = []
+        king.change_position('d7', pos)
         expect(king.position).to eq('d7')
       end
     end
 
     context 'when a player makes an illegal move' do
       it 'returns false' do
-        expect(king.change_position('c8')).to be(false)
+        pos = []
+        expect(king.change_position('c8', pos)).to be(false)
       end
     end
   end
