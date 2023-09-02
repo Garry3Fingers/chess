@@ -2,7 +2,7 @@
 
 require_relative 'create_pieces'
 
-# An instance of this class performs one player move on the board and returns an update hash of pieces.
+# An instance of this class performs one player move on the board.
 # If it's an illegal move, it returns false.
 class Move
   attr_accessor :current_player_pieces, :pieces_other_player
