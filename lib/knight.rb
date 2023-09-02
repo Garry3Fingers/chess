@@ -14,7 +14,7 @@ class Knight
     @board = board
   end
 
-  def change_position(destination)
+  def change_position(destination, _pos)
     pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
     destination_coordinate = [row_index(destination), column_index(destination)]
 
