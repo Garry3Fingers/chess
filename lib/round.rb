@@ -20,9 +20,13 @@ class Round
 
   def play
     print_board
+    return if check_king(white_pieces, 'Black')
+
     puts "\nThe white player makes a move."
     player_move(input, white_pieces, black_pieces, 'white')
     print_board
+    return if check_king(black_pieces, 'White')
+
     puts "\nThe black player makes a move."
     player_move(input, black_pieces, white_pieces, 'black')
   end
@@ -59,5 +63,12 @@ class Round
     else
       display_pos_change(player_move, color)
     end
+  end
+
+  def check_king(pieces, color)
+    return if pieces.key?(:king)
+
+    puts "#{color} player won the match!"
+    true
   end
 end
