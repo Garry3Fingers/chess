@@ -53,5 +53,27 @@ describe Round do
         round.play
       end
     end
+
+    context 'when the player wins the game' do
+      white_pieces = CreatePieces.new.white_pieces
+      black_pieces = CreatePieces.new.black_pieces
+      let(:display_board) { double('display board') }
+      let(:display_move) { double('display move') }
+      subject(:round) { described_class.new(white_pieces, black_pieces, display_board, display_move) }
+
+      before do
+        allow(display_board).to receive(:print_board)
+        allow(display_move).to receive(:change_position)
+        allow(round).to receive(:puts)
+        allow(round).to receive(:gets).and_return('a2 a4')
+      end
+
+      it 'puts a victory message' do
+        message = 'White player won the match!'
+        round.black_pieces.delete(:king)
+        expect(round).to receive(:puts).with(message).once
+        round.play
+      end
+    end
   end
 end
