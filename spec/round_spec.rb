@@ -9,7 +9,7 @@ describe Round do
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
-      subject(:round) { described_class.new(white_pieces, black_pieces, display_board, display_move) }
+      subject(:round) { described_class.new({ white_pieces:, black_pieces:, display_board:, display_move: }) }
 
       before do
         allow(round).to receive(:puts)
@@ -38,7 +38,7 @@ describe Round do
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
-      subject(:round) { described_class.new(white_pieces, black_pieces, display_board, display_move) }
+      subject(:round) { described_class.new({ white_pieces:, black_pieces:, display_board:, display_move: }) }
 
       before do
         allow(display_board).to receive(:print_board)
@@ -59,7 +59,7 @@ describe Round do
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
-      subject(:round) { described_class.new(white_pieces, black_pieces, display_board, display_move) }
+      subject(:round) { described_class.new({ white_pieces:, black_pieces:, display_board:, display_move: }) }
 
       before do
         allow(display_board).to receive(:print_board)
