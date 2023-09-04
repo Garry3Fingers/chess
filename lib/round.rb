@@ -1,31 +1,27 @@
 # frozen_string_literal: true
 
-require_relative 'display_board'
-require_relative 'display_move'
-require_relative 'create_pieces'
 require_relative 'move'
-require_relative 'coordinate_board'
 
 # This class implements one round of the game.
 class Round
   attr_reader :display_board, :display_move
   attr_accessor :white_pieces, :black_pieces
 
-  def initialize(white_pieces, black_pieces, display_board, display_move)
-    @white_pieces = white_pieces
-    @black_pieces = black_pieces
-    @display_board = display_board
-    @display_move = display_move
+  def initialize(args)
+    @white_pieces = args[:white_pieces]
+    @black_pieces = args[:black_pieces]
+    @display_board = args[:display_board]
+    @display_move = args[:display_move]
   end
 
   def play
     print_board
-    return if check_king(white_pieces, 'Black')
+    return true if check_king(white_pieces, 'Black')
 
     puts "\nThe white player makes a move."
     player_move(input, white_pieces, black_pieces, 'white')
     print_board
-    return if check_king(black_pieces, 'White')
+    return true if check_king(black_pieces, 'White')
 
     puts "\nThe black player makes a move."
     player_move(input, black_pieces, white_pieces, 'black')
