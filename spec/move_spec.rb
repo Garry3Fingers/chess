@@ -27,5 +27,13 @@ describe Move do
         expect(move.make_move('b2 a4')).to be(false)
       end
     end
+
+    context 'when a king under attack' do
+      it 'returns false' do
+        move.pieces_other_player[:pawn2].position = 'd6'
+        move.current_player_pieces[:king].position = 'd4'
+        expect(move.make_move('d4 d5')).to be(false)
+      end
+    end
   end
 end
