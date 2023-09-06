@@ -16,9 +16,7 @@ class Move
     move_arr = move.split(' ')
     current_player_pos = positions_hash(current_player_pieces)
     pos = all_positions
-    return false if check_before_move(current_player_pos, move_arr)
-    return false if current_player_pos.include?(move_arr.last.to_sym)
-    return false if move(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)
+    return false if check_move(move_arr, current_player_pos, pos)
 
     del_piece(move_arr.last.to_sym)
   end
@@ -66,5 +64,27 @@ class Move
     return unless positions.key?(move)
 
     pieces_other_player.delete(positions[move])
+  end
+
+  def king?(positions, move_arr)
+    piece_pos = move_arr.first.to_sym
+    return unless positions.key?(piece_pos)
+
+    positions[piece_pos] == :king
+  end
+
+  def king_under_attack?(move, positions, current_player_pos)
+    return unless king?(current_player_pos, move)
+
+    pieces_other_player.each_value do |value|
+      return true if value.can_make_move?(move.last, positions)
+    end
+  end
+
+  def check_move(move_arr, current_player_pos, pos)
+    return true if king_under_attack?(move_arr, pos, current_player_pos)
+    return true if check_before_move(current_player_pos, move_arr)
+    return true if current_player_pos.include?(move_arr.last.to_sym)
+    return true if move(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)
   end
 end
