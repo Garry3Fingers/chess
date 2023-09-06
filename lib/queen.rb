@@ -22,12 +22,16 @@ class Queen
   include ValidateBishopMove
   include ValidateRookMove
 
-  def change_position(destination, positions)
-    if check_queen_positions(destination) && check_queen_path(destination, positions)
-      @position = destination
+  def change_position(move, positions)
+    if can_make_move?(move, positions)
+      @position = move
     else
       false
     end
+  end
+
+  def can_make_move?(move, positions)
+    check_queen_positions(move) && check_queen_path(move, positions)
   end
 
   private

@@ -17,12 +17,16 @@ class Pawn
   end
 
   def change_position(move, positions)
-    if diagonal_attack(move, positions) || check_potencial_moves(move) && check_pawn_path(move, positions)
+    if can_make_move?(move, positions)
       @first_move = false
       @position = move
     else
       false
     end
+  end
+
+  def can_make_move?(move, positions)
+    diagonal_attack(move, positions) || check_potencial_moves(move) && check_pawn_path(move, positions)
   end
 
   private

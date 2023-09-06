@@ -14,15 +14,18 @@ class Knight
     @board = board
   end
 
-  def change_position(destination, _pos)
-    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
-    destination_coordinate = [row_index(destination), column_index(destination)]
-
-    if pontecial_moves.any? { |arr| arr == destination_coordinate }
-      @position = destination
+  def change_position(move, pos)
+    if can_make_move?(move, pos)
+      @position = move
     else
       false
     end
+  end
+
+  def can_make_move?(move, _pos)
+    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
+    destination_coordinate = [row_index(move), column_index(move)]
+    pontecial_moves.any? { |arr| arr == destination_coordinate }
   end
 
   private

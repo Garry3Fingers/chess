@@ -18,15 +18,18 @@ class Bishop
   include FindBishopMoves
   include ValidateBishopMove
 
-  def change_position(destination, positions)
-    pontecial_moves = add_bishop_potencial_moves(row_index(position), column_index(position))
-    destination_coordinate = [row_index(destination), column_index(destination)]
-
-    if check_bishop_postions(pontecial_moves, destination_coordinate) && check_bishop_path(destination, positions)
-      @position = destination
+  def change_position(move, positions)
+    if can_make_move?(move, positions)
+      @position = move
     else
       false
     end
+  end
+
+  def can_make_move?(move, positions)
+    pontecial_moves = add_bishop_potencial_moves(row_index(position), column_index(position))
+    destination_coordinate = [row_index(move), column_index(move)]
+    check_bishop_postions(pontecial_moves, destination_coordinate) && check_bishop_path(move, positions)
   end
 
   private

@@ -18,15 +18,18 @@ class Rook
   include FindRookMoves
   include ValidateRookMove
 
-  def change_position(destination, positions)
-    pontecial_moves = add_rook_potencial_moves(row_index(position), column_index(position))
-    destination_coordinate = [row_index(destination), column_index(destination)]
-
-    if check_rook_postions(pontecial_moves, destination_coordinate) && check_rook_path(destination, positions)
-      @position = destination
+  def change_position(move, positions)
+    if can_make_move?(move, positions)
+      @position = move
     else
       false
     end
+  end
+
+  def can_make_move?(move, positions)
+    pontecial_moves = add_rook_potencial_moves(row_index(position), column_index(position))
+    destination_coordinate = [row_index(move), column_index(move)]
+    check_rook_postions(pontecial_moves, destination_coordinate) && check_rook_path(move, positions)
   end
 
   private

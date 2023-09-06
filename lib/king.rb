@@ -14,15 +14,16 @@ class King
     @board = board
   end
 
-  def change_position(destination, _pos)
-    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
-    destination_coordinate = [row_index(destination), column_index(destination)]
-
-    if pontecial_moves.any? { |arr| arr == destination_coordinate }
-      @position = destination
+  def change_position(move, pos)
+    if can_make_move?(move, pos)
+      @position = move
     else
       false
     end
+  end
+
+  def can_make_move?(move, _pos)
+    check_potencial_moves(move)
   end
 
   private
@@ -49,5 +50,11 @@ class King
       [row - 1, column + 1],
       [row - 1, column - 1]
     ]
+  end
+
+  def check_potencial_moves(move)
+    pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
+    destination_coordinate = [row_index(move), column_index(move)]
+    pontecial_moves.any? { |arr| arr == destination_coordinate }
   end
 end
