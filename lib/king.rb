@@ -7,16 +7,18 @@ require_relative 'coordinate_board'
 # And if it can, it changes the current position.
 class King
   attr_reader :board
-  attr_accessor :position
+  attr_accessor :position, :first_move
 
   def initialize(position, board)
     @position = position
     @board = board
+    @first_move = true
   end
 
   def change_position(move, pos)
     if can_make_move?(move, pos)
       @position = move
+      @first_move = false
     else
       false
     end

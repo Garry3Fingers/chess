@@ -8,11 +8,12 @@ require_relative 'find_rook_moves'
 # And if it can, it changes the current position.
 class Rook
   attr_reader :board
-  attr_accessor :position
+  attr_accessor :position, :first_move
 
   def initialize(position, board)
     @position = position
     @board = board
+    @first_move = true
   end
 
   include FindRookMoves
@@ -21,6 +22,7 @@ class Rook
   def change_position(move, positions)
     if can_make_move?(move, positions)
       @position = move
+      @first_move = false
     else
       false
     end
