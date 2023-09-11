@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'create_pieces'
+require_relative 'castling'
 
 # An instance of this class performs one player move on the board.
 # If it's an illegal move, it returns false.
@@ -19,6 +19,18 @@ class Move
     return false if check_move(move_arr, current_player_pos, pos)
 
     del_piece(move_arr.last.to_sym)
+
+    true
+  end
+
+  def castling(move)
+    move_arr = move.split(' ')
+    current_player_pos = positions_hash(current_player_pieces)
+    pos = all_positions
+    return false if king_under_attack?(move_arr, pos, current_player_pos)
+    return false if perform_castling(move_arr, pos) == false
+
+    true
   end
 
   private
@@ -77,8 +89,11 @@ class Move
     return unless king?(current_player_pos, move)
 
     pieces_other_player.each_value do |value|
+      value.can_make_move?(move.last, positions)
       return true if value.can_make_move?(move.last, positions)
     end
+
+    false
   end
 
   def check_move(move_arr, current_player_pos, pos)
@@ -86,5 +101,24 @@ class Move
     return true if check_before_move(current_player_pos, move_arr)
     return true if current_player_pos.include?(move_arr.last.to_sym)
     return true if move(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)
+
+    false
+  end
+
+  def castling_args(move_arr, positions)
+    rook = if move_arr.first < move_arr.last
+             current_player_pieces[:rook2]
+           else
+             current_player_pieces[:rook1]
+           end
+
+    { rook:,
+      king: current_player_pieces[:king],
+      positions:,
+      move: move_arr.last }
+  end
+
+  def perform_castling(move_arr, positions)
+    Castling.new(castling_args(move_arr, positions)).perform_castling
   end
 end
