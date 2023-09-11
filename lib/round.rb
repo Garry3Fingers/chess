@@ -32,7 +32,7 @@ class Round
   def input
     input = ''
 
-    while /(?:castling )?[a-h][1-8] [a-h][1-8]/.match?(input) == false
+    while /(castling )?[a-h][1-8] [a-h][1-8]/.match?(input) == false
       puts "\nEnter the position of the piece to move.\nAnd after the space, the place where to move the piece."
       input = gets.chomp
     end

@@ -21,6 +21,7 @@ class Bishop
   def change_position(move, positions)
     if can_make_move?(move, positions)
       @position = move
+      true
     else
       false
     end

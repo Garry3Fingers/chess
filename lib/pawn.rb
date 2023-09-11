@@ -20,6 +20,7 @@ class Pawn
     if can_make_move?(move, positions)
       @first_move = false
       @position = move
+      true
     else
       false
     end

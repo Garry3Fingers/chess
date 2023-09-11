@@ -17,6 +17,7 @@ class Knight
   def change_position(move, pos)
     if can_make_move?(move, pos)
       @position = move
+      true
     else
       false
     end

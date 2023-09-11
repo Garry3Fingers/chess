@@ -23,6 +23,7 @@ class Rook
     if can_make_move?(move, positions)
       @position = move
       @first_move = false
+      true
     else
       false
     end

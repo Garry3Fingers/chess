@@ -19,6 +19,7 @@ class King
     if can_make_move?(move, pos)
       @position = move
       @first_move = false
+      true
     else
       false
     end
