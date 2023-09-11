@@ -88,8 +88,8 @@ class Move
   def king_under_attack?(move, positions, current_player_pos)
     return unless king?(current_player_pos, move)
 
-    pieces_other_player.each_value do |value|
-      value.can_make_move?(move.last, positions)
+    pieces_other_player.each do |key, value|
+      return true if key.start_with?('pawn') && value.can_make_move?(move.last, [move.last])
       return true if value.can_make_move?(move.last, positions)
     end
 
