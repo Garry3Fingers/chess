@@ -2,6 +2,9 @@
 
 require_relative '../lib/move'
 require_relative '../lib/create_pieces'
+require_relative '../lib/king'
+require_relative '../lib/rook'
+require_relative '../lib/coordinate_board'
 
 describe Move do
   white_pieces = CreatePieces.new.white_pieces
@@ -30,9 +33,30 @@ describe Move do
 
     context 'when a king under attack' do
       it 'returns false' do
-        move.pieces_other_player[:pawn2].position = 'd6'
-        move.current_player_pieces[:king].position = 'd4'
-        expect(move.make_move('d4 d5')).to be(false)
+        move.pieces_other_player[:pawn2].position = 'd5'
+        move.current_player_pieces[:king].position = 'd3'
+        expect(move.make_move('d3 d4')).to be(false)
+      end
+    end
+  end
+
+  describe '#castling' do
+    let(:board) { CoordinateBoard.new }
+    let(:king) { King.new('e1', board.board) }
+    let(:rook) { Rook.new('h1', board.board) }
+
+    context 'when a player can castle' do
+      it ' returns true' do
+        move.instance_variable_set(:@current_player_pieces, { king:, rook2: rook })
+        expect(move.castling('e1 g1')).to be(true)
+      end
+    end
+
+    context 'when a player cannot castle' do
+      it ' returns fasle' do
+        move.instance_variable_set(:@current_player_pieces, { king:, rook2: rook })
+        king.instance_variable_set(:@first_move, false)
+        expect(move.castling('e1 g1')).to be(false)
       end
     end
   end
