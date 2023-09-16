@@ -111,10 +111,11 @@ class EnPassant
     pawn.position = move
     if pawn.color == 'white'
       # display_move.change_start(black_pieces[pawn_container['black']].position)
-      black_pieces.delete(black_pieces[pawn_container['black']])
+
+      black_pieces.delete(pawn_container['black'])
     else
       # display_move.change_start(white_pieces[pawn_container['white']].position)
-      white_pieces.delete(white_pieces[pawn_container['white']])
+      white_pieces.delete(pawn_container['white'])
     end
   end
 end
