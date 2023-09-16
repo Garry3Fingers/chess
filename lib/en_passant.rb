@@ -13,7 +13,6 @@ class EnPassant
   end
 
   def perform_en_passant(move_arr, positions)
-    p pawn_container
     if pawn_container.empty?
       find_pawn(move_arr, positions)
       false
@@ -21,6 +20,7 @@ class EnPassant
       true
     else
       pawn_container.clear
+      find_pawn(move_arr, positions)
       false
     end
   end
