@@ -16,10 +16,21 @@ class DisplayMove
 
   def change_position(move, color)
     move = move.split(' ')
-    start_square = [row_index(move.first), column_index(move.first)]
-    end_square = [row_index(move.last), column_index(move.last)]
-    change_end(end_square, color, piece(start_square))
-    change_start(start_square)
+    change_end(find_square(move.last), color, piece(find_square(move.first)))
+    empty_square(move.first)
+  end
+
+  def empty_square(move)
+    case find_square(move)
+    in [row, column] if odd_even?(row, column)
+      empty_gray(row, column)
+    in [row, column] if odd_odd?(row, column)
+      empty_yellow(row, column)
+    in [row, column] if even_even?(row, column)
+      empty_yellow(row, column)
+    in [row, column] if even_odd?(row, column)
+      empty_gray(row, column)
+    end
   end
 
   private
@@ -33,6 +44,10 @@ class DisplayMove
       column = arr.index(location)
       return column unless column.nil?
     end
+  end
+
+  def find_square(move)
+    [row_index(move), column_index(move)]
   end
 
   def d_board
@@ -73,19 +88,6 @@ class DisplayMove
 
   def even_odd?(row, column)
     row.even? == true && column.even? == false
-  end
-
-  def change_start(start_square)
-    case start_square
-    in [row, column] if odd_even?(row, column)
-      empty_gray(row, column)
-    in [row, column] if odd_odd?(row, column)
-      empty_yellow(row, column)
-    in [row, column] if even_even?(row, column)
-      empty_yellow(row, column)
-    in [row, column] if even_odd?(row, column)
-      empty_gray(row, column)
-    end
   end
 
   def change_end(end_square, color, piece)
