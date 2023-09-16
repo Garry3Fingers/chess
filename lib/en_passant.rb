@@ -107,15 +107,24 @@ class EnPassant
     end
   end
 
+  def clear_black
+    display_move.empty_square(black_pieces[pawn_container['black']].position)
+    black_pieces.delete(pawn_container['black'])
+  end
+
+  def clear_white
+    display_move.empty_square(white_pieces[pawn_container['white']].position)
+    white_pieces.delete(pawn_container['white'])
+  end
+
   def en_passant(pawn, move)
     pawn.position = move
     if pawn.color == 'white'
-      # display_move.change_start(black_pieces[pawn_container['black']].position)
-
-      black_pieces.delete(pawn_container['black'])
+      clear_black
     else
-      # display_move.change_start(white_pieces[pawn_container['white']].position)
-      white_pieces.delete(pawn_container['white'])
+      clear_white
     end
+
+    pawn_container.clear
   end
 end
