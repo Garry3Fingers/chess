@@ -3,26 +3,41 @@
 # This class handles a special case: en passant move in chess.
 class EnPassant
   attr_reader :white_pieces, :black_pieces, :display_move
-  attr_accessor :pawn_container
+  attr_accessor :pawn_container, :pawn
 
   def initialize(white_pieces, black_pieces, display_move)
     @white_pieces = white_pieces
     @black_pieces = black_pieces
     @display_move = display_move
     @pawn_container = {}
+    @pawn = nil
   end
 
-  def perform_en_passant(move_arr, positions)
-    if pawn_container.empty?
-      find_pawn(move_arr, positions)
-      false
-    elsif find_next_move_piece(move_arr)
-      true
-    else
-      pawn_container.clear
-      find_pawn(move_arr, positions)
-      false
+  def look_for_pawn(move_arr, positions)
+    pawn_container.clear
+    find_pawn(move_arr, positions)
+  end
+
+  def check_en_passant(move_arr)
+    white_pawn_name = check_type_piece(white_pieces, move_arr.first)
+    black_pawn_name = check_type_piece(black_pieces, move_arr.first)
+
+    if white_pawn_name != 'not found'
+      try_en_passant(white_pieces[white_pawn_name], move_arr.last)
+    elsif black_pawn_name != 'not found'
+      try_en_passant(black_pieces[black_pawn_name], move_arr.last)
     end
+  end
+
+  def en_passant(move)
+    pawn.position = move
+    if pawn.color == 'white'
+      clear_black
+    else
+      clear_white
+    end
+
+    @pawn = nil
   end
 
   private
@@ -77,34 +92,20 @@ class EnPassant
   def check_top_square(move)
     return unless white_pieces.key?(pawn_container['white'])
 
-    "#{move[0]}#{move[1].to_i + 1}" == white_pieces[pawn_container['white'].position]
+    "#{move[0]}#{move[1].to_i + 1}" == white_pieces[pawn_container['white']].position
   end
 
   def try_en_passant(pawn, move)
     if pawn.color == 'white'
       return false if check_top_diagonals(pawn.position, move) == false
       return false if check_bottom_square(move) == false
-
-      en_passant(pawn, move)
     elsif pawn.color == 'black'
       return false if check_bottom_diagonals(pawn.position, move) == false
       return false if check_top_square(move) == false
-
-      en_passant(pawn, move)
     end
 
+    @pawn = pawn
     true
-  end
-
-  def find_next_move_piece(move_arr)
-    white_pawn_name = check_type_piece(white_pieces, move_arr.first)
-    black_pawn_name = check_type_piece(black_pieces, move_arr.first)
-
-    if white_pawn_name != 'not found'
-      try_en_passant(white_pieces[white_pawn_name], move_arr.last)
-    elsif black_pawn_name != 'not found'
-      try_en_passant(black_pieces[black_pawn_name], move_arr.last)
-    end
   end
 
   def clear_black
@@ -115,16 +116,5 @@ class EnPassant
   def clear_white
     display_move.empty_square(white_pieces[pawn_container['white']].position)
     white_pieces.delete(pawn_container['white'])
-  end
-
-  def en_passant(pawn, move)
-    pawn.position = move
-    if pawn.color == 'white'
-      clear_black
-    else
-      clear_white
-    end
-
-    pawn_container.clear
   end
 end
