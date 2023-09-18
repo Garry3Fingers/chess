@@ -9,7 +9,14 @@ require_relative '../lib/coordinate_board'
 describe Move do
   white_pieces = CreatePieces.new.white_pieces
   black_pieces = CreatePieces.new.black_pieces
-  subject(:move) { described_class.new(white_pieces, black_pieces) }
+  let(:en_passant) { double('en passant') }
+  subject(:move) { described_class.new(white_pieces, black_pieces, en_passant) }
+
+  before do
+    allow(en_passant).to receive(:pawn_container).and_return({})
+    allow(en_passant).to receive(:check_en_passant)
+    allow(en_passant).to receive(:look_for_pawn)
+  end
 
   describe '#make_move' do
     context 'when a player makes a move' do
