@@ -4,7 +4,7 @@ require_relative 'move'
 
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move
+  attr_reader :display_board, :display_move, :en_passant
   attr_accessor :white_pieces, :black_pieces
 
   def initialize(args)
@@ -12,6 +12,7 @@ class Round
     @black_pieces = args[:black_pieces]
     @display_board = args[:display_board]
     @display_move = args[:display_move]
+    @en_passant = args[:en_passant]
   end
 
   def play
@@ -44,7 +45,7 @@ class Round
   end
 
   def move(pieces, enemy_pieces, move)
-    Move.new(pieces, enemy_pieces).make_move(move)
+    Move.new(pieces, enemy_pieces, en_passant).make_move(move)
   end
 
   def display_pos_change(move, color)
@@ -90,7 +91,7 @@ class Round
   end
 
   def perform_castling(pieces, enemy_pieces, move)
-    Move.new(pieces, enemy_pieces).castling(move)
+    Move.new(pieces, enemy_pieces, en_passant).castling(move)
   end
 
   def standard_move(player_move, pieces, enemy_pieces, color)

@@ -4,6 +4,7 @@ require_relative 'display_board'
 require_relative 'display_move'
 require_relative 'create_pieces'
 require_relative 'coordinate_board'
+require_relative 'en_passant'
 require_relative 'chess'
 
 # This module helps with initializing the class Chess.
@@ -14,11 +15,13 @@ module ChessWrapper
     display_move = DisplayMove.new(coor_board, display_board)
     white_pieces = CreatePieces.new.white_pieces
     black_pieces = CreatePieces.new.black_pieces
+    en_passant = EnPassant.new(white_pieces, black_pieces, display_move)
     {
       white_pieces:,
       black_pieces:,
       display_board:,
-      display_move:
+      display_move:,
+      en_passant:
     }
   end
 
