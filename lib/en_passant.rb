@@ -19,6 +19,8 @@ class EnPassant
   end
 
   def check_en_passant(move_arr)
+    return false if pawn_container.empty?
+
     white_pawn_name = check_type_piece(white_pieces, move_arr.first)
     black_pawn_name = check_type_piece(black_pieces, move_arr.first)
 
