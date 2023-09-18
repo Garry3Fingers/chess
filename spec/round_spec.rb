@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/round'
+require_relative '../lib/create_pieces'
 
 describe Round do
   describe '#play' do
@@ -9,9 +10,20 @@ describe Round do
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
-      subject(:round) { described_class.new({ white_pieces:, black_pieces:, display_board:, display_move: }) }
+      let(:en_passant) { double('en passant') }
+      subject(:round) { described_class.new(@args) }
 
       before do
+        @args = {
+          white_pieces:,
+          black_pieces:,
+          display_board:,
+          display_move:,
+          en_passant:
+        }
+
+        allow(en_passant).to receive(:look_for_pawn)
+        allow(en_passant).to receive(:check_en_passant)
         allow(round).to receive(:puts)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
@@ -38,9 +50,20 @@ describe Round do
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
-      subject(:round) { described_class.new({ white_pieces:, black_pieces:, display_board:, display_move: }) }
+      let(:en_passant) { double('en passant') }
+      subject(:round) { described_class.new(@args) }
 
       before do
+        @args = {
+          white_pieces:,
+          black_pieces:,
+          display_board:,
+          display_move:,
+          en_passant:
+        }
+
+        allow(en_passant).to receive(:look_for_pawn)
+        allow(en_passant).to receive(:check_en_passant)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
         allow(round).to receive(:puts)
@@ -59,9 +82,19 @@ describe Round do
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
-      subject(:round) { described_class.new({ white_pieces:, black_pieces:, display_board:, display_move: }) }
+      let(:en_passant) { double('en passant') }
+      subject(:round) { described_class.new(@args) }
 
       before do
+        @args = {
+          white_pieces:,
+          black_pieces:,
+          display_board:,
+          display_move:,
+          en_passant:
+        }
+
+        allow(en_passant).to receive(:look_for_pawn)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
         allow(round).to receive(:puts)
