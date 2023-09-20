@@ -19,8 +19,7 @@ describe Queen do
   describe '#change_position' do
     context 'when a player makes a move' do
       it 'changes position' do
-        pos = %w[f5 d7]
-        queen.change_position('h8', pos)
+        queen.change_position('h8')
         expect(queen.position).to eq('h8')
       end
     end

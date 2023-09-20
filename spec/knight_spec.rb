@@ -19,8 +19,7 @@ describe Knight do
   describe '#change_position' do
     context 'when a player makes a move' do
       it 'changes position' do
-        pos = []
-        knight.change_position('c3', pos)
+        knight.change_position('c3')
         expect(knight.position).to eq('c3')
       end
     end

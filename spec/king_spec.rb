@@ -19,8 +19,7 @@ describe King do
   describe '#change_position' do
     context 'when a player makes a move' do
       it 'changes position' do
-        pos = []
-        king.change_position('d7', pos)
+        king.change_position('d7')
         expect(king.position).to eq('d7')
       end
     end

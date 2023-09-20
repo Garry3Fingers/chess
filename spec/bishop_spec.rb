@@ -19,8 +19,7 @@ describe Bishop do
   describe '#change_position' do
     context 'when a player makes a move' do
       it 'changes position' do
-        pos_on_way = ['c5']
-        bishop.change_position('g7', pos_on_way)
+        bishop.change_position('g7')
         expect(bishop.position).to eq('g7')
       end
     end

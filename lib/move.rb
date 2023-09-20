@@ -75,8 +75,8 @@ class Move
     current_player_pieces[player_pos[start_pos]].can_make_move?(end_pos, pos) == false
   end
 
-  def move(start_pos, end_pos, player_pos, pos)
-    current_player_pieces[player_pos[start_pos]].change_position(end_pos, pos)
+  def move(start_pos, end_pos, player_pos)
+    current_player_pieces[player_pos[start_pos]].change_position(end_pos)
   end
 
   def del_piece(move)
@@ -98,7 +98,7 @@ class Move
   def select_move(move_arr, current_player_pos, pos)
     if check_move(move_arr, current_player_pos, pos)
       en_passant.look_for_pawn(move_arr, pos)
-      move(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)
+      move(move_arr.first.to_sym, move_arr.last, current_player_pos)
       false
     elsif en_passant.check_en_passant(move_arr)
       en_passant.en_passant(move_arr.last)

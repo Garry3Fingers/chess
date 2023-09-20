@@ -18,13 +18,8 @@ class Bishop
   include FindBishopMoves
   include ValidateBishopMove
 
-  def change_position(move, positions)
-    if can_make_move?(move, positions)
-      @position = move
-      true
-    else
-      false
-    end
+  def change_position(move)
+    @position = move
   end
 
   def can_make_move?(move, positions)

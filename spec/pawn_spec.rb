@@ -19,8 +19,7 @@ describe Pawn do
   describe '#change_position' do
     context 'when a player makes a move' do
       it 'changes position' do
-        pos = []
-        pawn.change_position('f3', pos)
+        pawn.change_position('f3')
         expect(pawn.position).to eq('f3')
       end
     end

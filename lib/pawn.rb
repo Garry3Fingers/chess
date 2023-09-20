@@ -16,14 +16,9 @@ class Pawn
     @color = color
   end
 
-  def change_position(move, positions)
-    if can_make_move?(move, positions)
-      @first_move = false
-      @position = move
-      true
-    else
-      false
-    end
+  def change_position(move)
+    @first_move = false
+    @position = move
   end
 
   def can_make_move?(move, positions)

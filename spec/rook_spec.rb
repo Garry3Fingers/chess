@@ -20,8 +20,7 @@ describe Rook do
   describe '#change_position' do
     context 'when a player makes a move' do
       it 'changes position' do
-        pos_on_way = []
-        rook.change_position('d1', pos_on_way)
+        rook.change_position('d1')
         expect(rook.position).to eq('d1')
       end
     end

@@ -14,13 +14,8 @@ class Knight
     @board = board
   end
 
-  def change_position(move, pos)
-    if can_make_move?(move, pos)
-      @position = move
-      true
-    else
-      false
-    end
+  def change_position(move)
+    @position = move
   end
 
   def can_make_move?(move, _pos)

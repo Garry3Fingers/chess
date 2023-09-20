@@ -15,14 +15,9 @@ class King
     @first_move = true
   end
 
-  def change_position(move, pos)
-    if can_make_move?(move, pos)
-      @position = move
-      @first_move = false
-      true
-    else
-      false
-    end
+  def change_position(move)
+    @position = move
+    @first_move = false
   end
 
   def can_make_move?(move, _pos)
