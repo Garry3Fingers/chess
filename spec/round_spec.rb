@@ -11,6 +11,7 @@ describe Round do
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
       let(:en_passant) { double('en passant') }
+      let(:promote_pawn) { double('promote pawn') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -19,11 +20,13 @@ describe Round do
           black_pieces:,
           display_board:,
           display_move:,
-          en_passant:
+          en_passant:,
+          promote_pawn:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
         allow(en_passant).to receive(:check_en_passant)
+        allow(promote_pawn).to receive(:promote)
         allow(round).to receive(:puts)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
@@ -51,6 +54,7 @@ describe Round do
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
       let(:en_passant) { double('en passant') }
+      let(:promote_pawn) { double('promote pawn') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -59,11 +63,13 @@ describe Round do
           black_pieces:,
           display_board:,
           display_move:,
-          en_passant:
+          en_passant:,
+          promote_pawn:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
         allow(en_passant).to receive(:check_en_passant)
+        allow(promote_pawn).to receive(:promote)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
         allow(round).to receive(:puts)
@@ -83,6 +89,7 @@ describe Round do
       let(:display_board) { double('display board') }
       let(:display_move) { double('display move') }
       let(:en_passant) { double('en passant') }
+      let(:promote_pawn) { double('promote pawn') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -91,10 +98,12 @@ describe Round do
           black_pieces:,
           display_board:,
           display_move:,
-          en_passant:
+          en_passant:,
+          promote_pawn:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
+        allow(promote_pawn).to receive(:promote)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
         allow(round).to receive(:puts)
