@@ -5,6 +5,7 @@ require_relative 'display_move'
 require_relative 'create_pieces'
 require_relative 'coordinate_board'
 require_relative 'en_passant'
+require_relative 'promotion_pawn'
 require_relative 'chess'
 
 # This module helps with initializing the class Chess.
@@ -16,12 +17,15 @@ module ChessWrapper
     white_pieces = CreatePieces.new.white_pieces
     black_pieces = CreatePieces.new.black_pieces
     en_passant = EnPassant.new(white_pieces, black_pieces, display_move)
+    promote_pawn = PromotePawn.new(white_pieces, black_pieces, display_move)
+
     {
       white_pieces:,
       black_pieces:,
       display_board:,
       display_move:,
-      en_passant:
+      en_passant:,
+      promote_pawn:
     }
   end
 
