@@ -117,16 +117,6 @@ class PromotePawn
   end
 
   def unicode_piece
-    # case piece
-    # when 'knight'
-    #   " \u265E "
-    # when  'bishop'
-    #   " \u265D "
-    # when  'rook'
-    #   " \u265C "
-    # else
-    #   " \u265B "
-    # end
     {
       'knight' => " \u265E ",
       'bishop' => " \u265D ",
