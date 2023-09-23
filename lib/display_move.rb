@@ -16,12 +16,12 @@ class DisplayMove
 
   def change_position(move, color)
     move = move.split(' ')
-    change_end(find_square(move.last), color, piece(find_square(move.first)))
+    change_square(move.last, color, piece(find_square(move.first)))
     empty_square(move.first)
   end
 
-  def empty_square(move)
-    case find_square(move)
+  def empty_square(square)
+    case find_square(square)
     in [row, column] if odd_even?(row, column)
       empty_gray(row, column)
     in [row, column] if odd_odd?(row, column)
@@ -30,6 +30,19 @@ class DisplayMove
       empty_yellow(row, column)
     in [row, column] if even_odd?(row, column)
       empty_gray(row, column)
+    end
+  end
+
+  def change_square(square, color, piece)
+    case find_square(square)
+    in [row, column] if odd_even?(row, column)
+      piece_gray(piece, color, row, column)
+    in [row, column] if odd_odd?(row, column)
+      piece_yellow(piece, color, row, column)
+    in [row, column] if even_even?(row, column)
+      piece_yellow(piece, color, row, column)
+    in [row, column] if even_odd?(row, column)
+      piece_gray(piece, color, row, column)
     end
   end
 
@@ -88,18 +101,5 @@ class DisplayMove
 
   def even_odd?(row, column)
     row.even? == true && column.even? == false
-  end
-
-  def change_end(end_square, color, piece)
-    case end_square
-    in [row, column] if odd_even?(row, column)
-      piece_gray(piece, color, row, column)
-    in [row, column] if odd_odd?(row, column)
-      piece_yellow(piece, color, row, column)
-    in [row, column] if even_even?(row, column)
-      piece_yellow(piece, color, row, column)
-    in [row, column] if even_odd?(row, column)
-      piece_gray(piece, color, row, column)
-    end
   end
 end
