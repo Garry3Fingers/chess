@@ -5,8 +5,8 @@ require_relative '../lib/display_board'
 require_relative '../lib/coordinate_board'
 
 describe DisplayMove do
-  subject(:display_board) { DisplayBoard.new }
-  subject(:c_board) { CoordinateBoard.new }
+  let(:display_board) { DisplayBoard.new }
+  let(:c_board) { CoordinateBoard.new }
   subject(:display_move) { described_class.new(c_board.board, display_board) }
 
   before do
