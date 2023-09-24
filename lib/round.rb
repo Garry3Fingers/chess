@@ -34,7 +34,7 @@ class Round
   def input
     input = ''
 
-    while /(castling )?[a-h][1-8] [a-h][1-8]/.match?(input) == false
+    until /(castling )?[a-h][1-8] [a-h][1-8]/.match?(input)
       puts "\nEnter the position of the piece to move.\nAnd after the space, the place where to move the piece."
       input = gets.chomp
     end
@@ -82,7 +82,7 @@ class Round
   end
 
   def castling(player_move, pieces, enemy_pieces, color)
-    if perform_castling(pieces, enemy_pieces, player_move) == false
+    if !perform_castling(pieces, enemy_pieces, player_move)
       puts 'You can\'t make an illegal move. Try again!'
       player_move(input, pieces, enemy_pieces, color)
     else
@@ -96,7 +96,7 @@ class Round
   end
 
   def standard_move(player_move, pieces, enemy_pieces, color)
-    if move(pieces, enemy_pieces, player_move) == false
+    if !move(pieces, enemy_pieces, player_move)
       puts 'You can\'t make an illegal move. Try again!'
       player_move(input, pieces, enemy_pieces, color)
     else
