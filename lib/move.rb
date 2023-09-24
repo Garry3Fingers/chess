@@ -31,7 +31,7 @@ class Move
     current_player_pos = positions_hash(current_player_pieces)
     pos = all_positions
     return false if king_under_attack?(move_arr, pos, current_player_pos)
-    return false if perform_castling(move_arr, pos) == false
+    return false unless perform_castling(move_arr, pos)
 
     en_passant.pawn_container.clear
     true
