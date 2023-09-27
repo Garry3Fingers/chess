@@ -14,6 +14,7 @@ class Check
   end
 
   def after_move(color, positions)
+    @check_color = ''
     notify_about_check(color, positions)
   end
 
