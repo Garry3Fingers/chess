@@ -13,11 +13,11 @@ class Check
     @check_color = ''
   end
 
-  def check_after_move(color, positions)
+  def after_move(color, positions)
     notify_about_check(color, positions)
   end
 
-  def check_before_move(move_arr, color, positions)
+  def before_move(move_arr, color, positions)
     return false unless fake_move(move_arr, color, positions)
 
     true
@@ -96,19 +96,27 @@ class Check
     white + black
   end
 
+  def white_color(move_arr, positions)
+    white_pieces_copy = deep_copy(white_pieces)
+    return nil unless make_fake_move(white_pieces_copy, move_arr, positions)
+
+    new_positions = all_positions(white_pieces_copy, black_pieces)
+    find_attacking_piece(white_pieces_copy[:king].position, black_pieces, new_positions)
+  end
+
+  def black_color(move_arr, positions)
+    black_pieces_copy = deep_copy(black_pieces)
+    return nil unless make_fake_move(black_pieces_copy, move_arr, positions)
+
+    new_positions = all_positions(white_pieces, black_pieces_copy)
+    find_attacking_piece(black_pieces_copy[:king].position, white_pieces, new_positions)
+  end
+
   def fake_move(move_arr, color, positions)
     if color == 'white'
-      white_pieces_copy = deep_copy(white_pieces)
-      return unless make_fake_move(white_pieces_copy, move_arr, positions)
-
-      new_positions = all_positions(white_pieces_copy, black_pieces)
-      attacking_piece = find_attacking_piece(white_pieces_copy[:king].position, black_pieces, new_positions)
+      attacking_piece = white_color(move_arr, positions)
     elsif color == 'black'
-      black_pieces_copy = deep_copy(black_pieces)
-      return unless make_fake_move(black_pieces_copy, move_arr, positions)
-
-      new_positions = all_positions(white_pieces, black_pieces_copy)
-      attacking_piece = find_attacking_piece(black_pieces_copy[:king].position, white_pieces, new_positions)
+      attacking_piece = black_color(move_arr, positions)
     end
 
     return if attacking_piece.nil?
