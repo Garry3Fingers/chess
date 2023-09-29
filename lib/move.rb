@@ -6,30 +6,33 @@ require_relative 'attackable_king'
 # An instance of this class performs one player move on the board.
 # If it's an illegal move, it returns false.
 class Move
-  attr_accessor :current_player_pieces, :pieces_other_player, :en_passant
+  attr_accessor :current_player_pieces, :pieces_other_player, :en_passant, :check
 
-  def initialize(current_player_pieces, pieces_other_player, en_passant)
+  def initialize(current_player_pieces, pieces_other_player, en_passant, check)
     @current_player_pieces = current_player_pieces
     @pieces_other_player = pieces_other_player
     @en_passant = en_passant
+    @check = check
   end
 
   include AttackableKing
 
-  def make_move(move)
+  def make_move(move, color)
     move_arr = move.split(' ')
     current_player_pos = positions_hash(current_player_pieces)
-    pos = all_positions
-    return false if select_move(move_arr, current_player_pos, pos)
+    return false if select_move(move_arr, current_player_pos, all_positions, color)
 
     del_piece(move_arr.last.to_sym)
+
+    check.after_move(color, all_positions)
     true
   end
 
-  def castling(move)
+  def castling(move, color)
     move_arr = move.split(' ')
     current_player_pos = positions_hash(current_player_pieces)
     pos = all_positions
+    return false if check.check_color == color
     return false if king_under_attack?(move_arr, pos, current_player_pos)
     return false unless perform_castling(move_arr, pos)
 
@@ -86,8 +89,8 @@ class Move
     pieces_other_player.delete(positions[move])
   end
 
-  def check_move(move_arr, current_player_pos, pos)
-    return false if king_under_attack?(move_arr, pos, current_player_pos)
+  def check_move(move_arr, current_player_pos, pos, color)
+    return false if check.before_move(move_arr, color, pos)
     return false if check_before_move(current_player_pos, move_arr)
     return false if current_player_pos.include?(move_arr.last.to_sym)
     return false if can_make_move?(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)
@@ -95,12 +98,12 @@ class Move
     true
   end
 
-  def select_move(move_arr, current_player_pos, pos)
-    if check_move(move_arr, current_player_pos, pos)
+  def select_move(move_arr, current_player_pos, pos, color)
+    if check_move(move_arr, current_player_pos, pos, color)
       en_passant.look_for_pawn(move_arr, pos)
       move(move_arr.first.to_sym, move_arr.last, current_player_pos)
       false
-    elsif en_passant.check_en_passant(move_arr)
+    elsif en_passant.check_en_passant(move_arr) && !check.before_en_passant(move_arr, color)
       en_passant.en_passant(move_arr.last)
       false
     else
