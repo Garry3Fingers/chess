@@ -4,7 +4,7 @@ require_relative 'move'
 
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move, :promote_pawn, :en_passant
+  attr_reader :display_board, :display_move, :promote_pawn, :en_passant, :check
   attr_accessor :white_pieces, :black_pieces
 
   def initialize(args)
@@ -14,6 +14,7 @@ class Round
     @display_move = args[:display_move]
     @en_passant = args[:en_passant]
     @promote_pawn = args[:promote_pawn]
+    @check = args[:check]
   end
 
   def play
@@ -45,8 +46,8 @@ class Round
     display_board.print_board
   end
 
-  def move(pieces, enemy_pieces, move)
-    Move.new(pieces, enemy_pieces, en_passant).make_move(move)
+  def move(pieces, enemy_pieces, move, color)
+    Move.new(pieces, enemy_pieces, en_passant, check).make_move(move, color)
   end
 
   def display_pos_change(move, color)
@@ -82,7 +83,7 @@ class Round
   end
 
   def castling(player_move, pieces, enemy_pieces, color)
-    if !perform_castling(pieces, enemy_pieces, player_move)
+    if !perform_castling(pieces, enemy_pieces, player_move, color)
       puts 'You can\'t make an illegal move. Try again!'
       player_move(input, pieces, enemy_pieces, color)
     else
@@ -91,12 +92,12 @@ class Round
     end
   end
 
-  def perform_castling(pieces, enemy_pieces, move)
-    Move.new(pieces, enemy_pieces, en_passant).castling(move)
+  def perform_castling(pieces, enemy_pieces, move, color)
+    Move.new(pieces, enemy_pieces, en_passant, check).castling(move, color)
   end
 
   def standard_move(player_move, pieces, enemy_pieces, color)
-    if !move(pieces, enemy_pieces, player_move)
+    if !move(pieces, enemy_pieces, player_move, color)
       puts 'You can\'t make an illegal move. Try again!'
       player_move(input, pieces, enemy_pieces, color)
     else
