@@ -4,12 +4,13 @@ require 'colorize'
 
 # This class determines whether there is a king in check.
 class Check
-  attr_reader :white_pieces, :black_pieces
+  attr_reader :white_pieces, :black_pieces, :en_passant
   attr_accessor :check_color
 
-  def initialize(white_pieces, black_pieces)
+  def initialize(white_pieces, black_pieces, en_passant)
     @white_pieces = white_pieces
     @black_pieces = black_pieces
+    @en_passant = en_passant
     @check_color = ''
   end
 
@@ -20,6 +21,12 @@ class Check
 
   def before_move(move_arr, color, positions)
     return false unless fake_move(move_arr, color, positions)
+
+    true
+  end
+
+  def before_en_passant(move_arr, color)
+    return false unless en_passant_fake(move_arr, color)
 
     true
   end
@@ -97,28 +104,45 @@ class Check
     white + black
   end
 
-  def white_color(move_arr, positions)
-    white_pieces_copy = deep_copy(white_pieces)
-    return nil unless make_fake_move(white_pieces_copy, move_arr, positions)
-
-    new_positions = all_positions(white_pieces_copy, black_pieces)
-    find_attacking_piece(white_pieces_copy[:king].position, black_pieces, new_positions)
+  def find_pawn(position, pieces)
+    pieces.each do |name, piece|
+      return name if piece.position == position
+    end
   end
 
-  def black_color(move_arr, positions)
-    black_pieces_copy = deep_copy(black_pieces)
-    return nil unless make_fake_move(black_pieces_copy, move_arr, positions)
+  def do_fake_en_passant(move_arr, color, main_copy, minor_copy)
+    pawn = find_pawn(move_arr.first, main_copy)
+    main_copy[pawn].position = move_arr.last
+    minor_copy.delete(en_passant.pawn_container[color])
+    new_positions = all_positions(main_copy, minor_copy)
+    find_attacking_piece(main_copy[:king].position, minor_copy, new_positions)
+  end
 
-    new_positions = all_positions(white_pieces, black_pieces_copy)
-    find_attacking_piece(black_pieces_copy[:king].position, white_pieces, new_positions)
+  def en_passant_fake(move_arr, color)
+    attacking_piece = if color == 'white'
+                        do_fake_en_passant(move_arr, 'black', deep_copy(white_pieces), deep_copy(black_pieces))
+                      else
+                        do_fake_en_passant(move_arr, 'white', deep_copy(black_pieces), deep_copy(white_pieces))
+                      end
+
+    return if attacking_piece.nil?
+
+    true
+  end
+
+  def process_move(move_arr, positions, copy_pieces, real_pieces)
+    return nil unless make_fake_move(copy_pieces, move_arr, positions)
+
+    new_positions = all_positions(copy_pieces, real_pieces)
+    find_attacking_piece(copy_pieces[:king].position, real_pieces, new_positions)
   end
 
   def fake_move(move_arr, color, positions)
-    if color == 'white'
-      attacking_piece = white_color(move_arr, positions)
-    elsif color == 'black'
-      attacking_piece = black_color(move_arr, positions)
-    end
+    attacking_piece = if color == 'white'
+                        process_move(move_arr, positions, deep_copy(white_pieces), black_pieces)
+                      else
+                        process_move(move_arr, positions, deep_copy(black_pieces), white_pieces)
+                      end
 
     return if attacking_piece.nil?
 
