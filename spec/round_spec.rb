@@ -12,6 +12,7 @@ describe Round do
       let(:display_move) { double('display move') }
       let(:en_passant) { double('en passant') }
       let(:promote_pawn) { double('promote pawn') }
+      let(:check) { double('check') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -21,7 +22,8 @@ describe Round do
           display_board:,
           display_move:,
           en_passant:,
-          promote_pawn:
+          promote_pawn:,
+          check:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
@@ -30,6 +32,8 @@ describe Round do
         allow(round).to receive(:puts)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
+        allow(check).to receive(:before_move)
+        allow(check).to receive(:after_move)
         allow(round).to receive(:gets).and_return('a2 a4', 'a7 a5', 'b1 c3', 'b8 c6')
       end
 
@@ -55,6 +59,7 @@ describe Round do
       let(:display_move) { double('display move') }
       let(:en_passant) { double('en passant') }
       let(:promote_pawn) { double('promote pawn') }
+      let(:check) { double('check') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -64,7 +69,8 @@ describe Round do
           display_board:,
           display_move:,
           en_passant:,
-          promote_pawn:
+          promote_pawn:,
+          check:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
@@ -72,6 +78,8 @@ describe Round do
         allow(promote_pawn).to receive(:promote)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
+        allow(check).to receive(:before_move)
+        allow(check).to receive(:after_move)
         allow(round).to receive(:puts)
         allow(round).to receive(:gets).and_return('a2 a5', 'a2 a4', 'a7 a5')
       end
@@ -90,6 +98,7 @@ describe Round do
       let(:display_move) { double('display move') }
       let(:en_passant) { double('en passant') }
       let(:promote_pawn) { double('promote pawn') }
+      let(:check) { double('check') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -99,13 +108,16 @@ describe Round do
           display_board:,
           display_move:,
           en_passant:,
-          promote_pawn:
+          promote_pawn:,
+          check:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
         allow(promote_pawn).to receive(:promote)
         allow(display_board).to receive(:print_board)
         allow(display_move).to receive(:change_position)
+        allow(check).to receive(:before_move)
+        allow(check).to receive(:after_move)
         allow(round).to receive(:puts)
         allow(round).to receive(:gets).and_return('a2 a4')
       end
