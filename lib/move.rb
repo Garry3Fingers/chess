@@ -2,6 +2,7 @@
 
 require_relative 'castling'
 require_relative 'attackable_king'
+require_relative 'positions'
 
 # An instance of this class performs one player move on the board.
 # If it's an illegal move, it returns false.
@@ -16,25 +17,27 @@ class Move
   end
 
   include AttackableKing
+  include Positions
 
   def make_move(move, color)
     move_arr = move.split(' ')
     current_player_pos = positions_hash(current_player_pieces)
-    return false if select_move(move_arr, current_player_pos, all_positions, color)
+    positions = all_positions(current_player_pieces, pieces_other_player)
+    return false if select_move(move_arr, current_player_pos, positions, color)
 
     del_piece(move_arr.last.to_sym)
 
-    check.after_move(color, all_positions)
+    check.after_move(color)
     true
   end
 
   def castling(move, color)
     move_arr = move.split(' ')
     current_player_pos = positions_hash(current_player_pieces)
-    pos = all_positions
+    positions = all_positions(current_player_pieces, pieces_other_player)
     return false if check.check_color == color
-    return false if king_under_attack?(move_arr, pos, current_player_pos)
-    return false unless perform_castling(move_arr, pos)
+    return false if king_under_attack?(move_arr, positions, current_player_pos)
+    return false unless perform_castling(move_arr, positions)
 
     en_passant.pawn_container.clear
     true
@@ -51,23 +54,6 @@ class Move
     end
 
     positions
-  end
-
-  def positions_arr(pieces)
-    positions = []
-
-    pieces.each_value do |value|
-      pos = value.position
-      positions << pos
-    end
-
-    positions
-  end
-
-  def all_positions
-    first_player = positions_arr(current_player_pieces)
-    second_player = positions_arr(pieces_other_player)
-    first_player + second_player
   end
 
   def check_before_move(positions, move_arr)
@@ -90,7 +76,7 @@ class Move
   end
 
   def check_move(move_arr, current_player_pos, pos, color)
-    return false if check.before_move(move_arr, color, pos)
+    return false if check.before_move(move_arr, color)
     return false if check_before_move(current_player_pos, move_arr)
     return false if current_player_pos.include?(move_arr.last.to_sym)
     return false if can_make_move?(move_arr.first.to_sym, move_arr.last, current_player_pos, pos)

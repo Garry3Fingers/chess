@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'colorize'
+require_relative 'positions'
 
 # This class determines whether there is a king in check.
 class Check
@@ -14,13 +15,15 @@ class Check
     @check_color = ''
   end
 
-  def after_move(color, positions)
+  include Positions
+
+  def after_move(color)
     @check_color = ''
-    notify_about_check(color, positions)
+    notify_about_check(color)
   end
 
-  def before_move(move_arr, color, positions)
-    return false unless fake_move(move_arr, color, positions)
+  def before_move(move_arr, color)
+    return false unless fake_move(move_arr, color)
 
     true
   end
@@ -58,7 +61,8 @@ class Check
     end
   end
 
-  def notify_about_check(color, positions)
+  def notify_about_check(color)
+    positions = all_positions(white_pieces, black_pieces)
     attacking_piece = if color == 'white'
                         find_attacking_piece(black_pieces[:king].position, white_pieces, positions)
                       elsif color == 'black'
@@ -73,35 +77,6 @@ class Check
 
   def deep_copy(object)
     Marshal.load(Marshal.dump(object))
-  end
-
-  def make_fake_move(pieces, move_arr, positions)
-    pieces.each_value do |piece|
-      next unless piece.position == move_arr.first
-      break unless piece.can_make_move?(move_arr.last, positions)
-
-      piece.position = move_arr.last
-      return true
-    end
-
-    false
-  end
-
-  def positions_arr(pieces)
-    positions = []
-
-    pieces.each_value do |value|
-      pos = value.position
-      positions << pos
-    end
-
-    positions
-  end
-
-  def all_positions(white_p, black_p)
-    white = positions_arr(white_p)
-    black = positions_arr(black_p)
-    white + black
   end
 
   def find_pawn(position, pieces)
@@ -130,6 +105,18 @@ class Check
     true
   end
 
+  def make_fake_move(pieces, move_arr, positions)
+    pieces.each_value do |piece|
+      next unless piece.position == move_arr.first
+      break unless piece.can_make_move?(move_arr.last, positions)
+
+      piece.position = move_arr.last
+      return true
+    end
+
+    false
+  end
+
   def process_move(move_arr, positions, copy_pieces, real_pieces)
     return nil unless make_fake_move(copy_pieces, move_arr, positions)
 
@@ -137,7 +124,8 @@ class Check
     find_attacking_piece(copy_pieces[:king].position, real_pieces, new_positions)
   end
 
-  def fake_move(move_arr, color, positions)
+  def fake_move(move_arr, color)
+    positions = all_positions(white_pieces, black_pieces)
     attacking_piece = if color == 'white'
                         process_move(move_arr, positions, deep_copy(white_pieces), black_pieces)
                       else
