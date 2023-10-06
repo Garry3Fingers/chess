@@ -20,12 +20,12 @@ class Round
 
   def play
     print_board
-    return true if checkmate('white')
+    return true if check_end_game('white', 'black')
 
     puts "\nThe white player makes a move."
     player_move(input, white_pieces, black_pieces, 'white')
     print_board
-    return true if checkmate('black')
+    return true if check_end_game('black', 'white')
 
     puts "\nThe black player makes a move."
     player_move(input, black_pieces, white_pieces, 'black')
@@ -118,10 +118,24 @@ class Round
     end
   end
 
-  def checkmate(color)
-    return false unless mate.mate?(color)
+  def stalemate(color)
+    return false unless mate.process_mate(color)
 
-    puts "Checkmate! #{color.capitalize} player won the match!"
+    puts "Stalemate! It's a draw."
     true
+  end
+
+  def checkmate(color_check, color_player)
+    return false unless check.check_color == color_check
+    return false unless mate.process_mate(color_check)
+
+    puts "Checkmate! #{color_player.capitalize} player won the match!"
+    true
+  end
+
+  def check_end_game(color_check, color_player)
+    return true if checkmate(color_check, color_player) || stalemate(color_check)
+
+    false
   end
 end
