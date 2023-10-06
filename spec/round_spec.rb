@@ -13,6 +13,7 @@ describe Round do
       let(:en_passant) { double('en passant') }
       let(:promote_pawn) { double('promote pawn') }
       let(:check) { double('check') }
+      let(:mate) { double('mate') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -23,7 +24,8 @@ describe Round do
           display_move:,
           en_passant:,
           promote_pawn:,
-          check:
+          check:,
+          mate:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
@@ -34,6 +36,7 @@ describe Round do
         allow(display_move).to receive(:change_position)
         allow(check).to receive(:before_move)
         allow(check).to receive(:after_move)
+        allow(mate).to receive(:mate?)
         allow(round).to receive(:gets).and_return('a2 a4', 'a7 a5', 'b1 c3', 'b8 c6')
       end
 
@@ -60,6 +63,7 @@ describe Round do
       let(:en_passant) { double('en passant') }
       let(:promote_pawn) { double('promote pawn') }
       let(:check) { double('check') }
+      let(:mate) { double('mate') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -70,7 +74,8 @@ describe Round do
           display_move:,
           en_passant:,
           promote_pawn:,
-          check:
+          check:,
+          mate:
         }
 
         allow(en_passant).to receive(:look_for_pawn)
@@ -80,6 +85,7 @@ describe Round do
         allow(display_move).to receive(:change_position)
         allow(check).to receive(:before_move)
         allow(check).to receive(:after_move)
+        allow(mate).to receive(:mate?)
         allow(round).to receive(:puts)
         allow(round).to receive(:gets).and_return('a2 a5', 'a2 a4', 'a7 a5')
       end
@@ -99,6 +105,7 @@ describe Round do
       let(:en_passant) { double('en passant') }
       let(:promote_pawn) { double('promote pawn') }
       let(:check) { double('check') }
+      let(:mate) { double('mate') }
       subject(:round) { described_class.new(@args) }
 
       before do
@@ -109,22 +116,16 @@ describe Round do
           display_move:,
           en_passant:,
           promote_pawn:,
-          check:
+          check:,
+          mate:
         }
 
-        allow(en_passant).to receive(:look_for_pawn)
-        allow(promote_pawn).to receive(:promote)
         allow(display_board).to receive(:print_board)
-        allow(display_move).to receive(:change_position)
-        allow(check).to receive(:before_move)
-        allow(check).to receive(:after_move)
-        allow(round).to receive(:puts)
-        allow(round).to receive(:gets).and_return('a2 a4')
+        allow(mate).to receive(:mate?).and_return(true)
       end
 
       it 'puts a victory message' do
-        message = 'White player won the match!'
-        round.black_pieces.delete(:king)
+        message = 'Checkmate! Black player won the match!'
         expect(round).to receive(:puts).with(message).once
         round.play
       end
