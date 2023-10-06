@@ -28,35 +28,40 @@ class Mate
     CoordinateBoard.new.board.flatten.sort
   end
 
-  def binary_search(array, search_value, lower_bound, upper_bound)
+  def binary_search(array, search_value, upper_bound, lower_bound = 0)
     midpoint = (upper_bound + lower_bound) / 2
     value_at_midpoint = array[midpoint]
 
     if search_value == value_at_midpoint
       midpoint
     elsif search_value < value_at_midpoint
-      binary_search(array, search_value, lower_bound, midpoint - 1)
+      binary_search(array, search_value, midpoint - 1, lower_bound)
     elsif search_value > value_at_midpoint
-      binary_search(array, search_value, midpoint + 1, upper_bound)
+      binary_search(array, search_value, upper_bound, midpoint + 1)
     end
   end
 
   def delete_useless_squares(pieces, board_squares)
     positions_arr(pieces).each do |position|
-      index = binary_search(board_squares, position, 0, board_squares.length - 1)
+      index = binary_search(board_squares, position, board_squares.length - 1)
       board_squares.delete_at(index)
     end
   end
 
   def try_en_passant(move_arr, color)
-    en_passant.try_en_passant(move_arr) && check.before_en_passant(move_arr, color)
+    en_passant.check_en_passant(move_arr) && check.before_en_passant(move_arr, color)
+  end
+
+  def try_make_move(name, piece, square, positions)
+    piece.can_make_move?(square, positions) ||
+      (name.start_with?('pawn') && piece.can_make_move?(square, [square]))
   end
 
   def try_move(pieces, color, positions, board_squares)
-    pieces.each_value do |piece|
+    pieces.each do |name, piece|
       board_squares.each do |square|
         move_arr = [piece.position, square]
-        next unless piece.can_make_move?(square, positions)
+        next unless try_make_move(name, piece, square, positions)
         return false unless check.before_move(move_arr, color) || try_en_passant(move_arr, color)
       end
     end
