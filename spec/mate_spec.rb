@@ -42,7 +42,7 @@ describe Mate do
 
       before do
         allow(check).to receive(:check_color).and_return('black')
-        allow(en_passant).to receive(:try_en_passant).and_return(false)
+        allow(en_passant).to receive(:check_en_passant).and_return(false)
       end
 
       it 'returns false' do
