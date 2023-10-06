@@ -36,7 +36,8 @@ describe Round do
         allow(display_move).to receive(:change_position)
         allow(check).to receive(:before_move)
         allow(check).to receive(:after_move)
-        allow(mate).to receive(:mate?)
+        allow(check).to receive(:check_color)
+        allow(mate).to receive(:process_mate)
         allow(round).to receive(:gets).and_return('a2 a4', 'a7 a5', 'b1 c3', 'b8 c6')
       end
 
@@ -85,7 +86,8 @@ describe Round do
         allow(display_move).to receive(:change_position)
         allow(check).to receive(:before_move)
         allow(check).to receive(:after_move)
-        allow(mate).to receive(:mate?)
+        allow(check).to receive(:check_color)
+        allow(mate).to receive(:process_mate)
         allow(round).to receive(:puts)
         allow(round).to receive(:gets).and_return('a2 a5', 'a2 a4', 'a7 a5')
       end
@@ -97,7 +99,7 @@ describe Round do
       end
     end
 
-    context 'when the player wins the game' do
+    context 'when the player wins the game or it\'s a draw' do
       white_pieces = CreatePieces.new.white_pieces
       black_pieces = CreatePieces.new.black_pieces
       let(:display_board) { double('display board') }
@@ -121,11 +123,19 @@ describe Round do
         }
 
         allow(display_board).to receive(:print_board)
-        allow(mate).to receive(:mate?).and_return(true)
+        allow(mate).to receive(:process_mate).and_return(true)
       end
 
-      it 'puts a victory message' do
+      it 'puts a checkmate message' do
+        allow(check).to receive(:check_color).and_return('white')
         message = 'Checkmate! Black player won the match!'
+        expect(round).to receive(:puts).with(message).once
+        round.play
+      end
+
+      it 'puts a stalemate message' do
+        allow(check).to receive(:check_color)
+        message = 'Stalemate! It\'s a draw.'
         expect(round).to receive(:puts).with(message).once
         round.play
       end
