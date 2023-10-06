@@ -16,10 +16,17 @@ class Mate
 
   include Positions
 
-  def mate?(color)
-    return false unless check.check_color == color
+  def process_mate(color)
+    positions = all_positions(white_pieces, black_pieces)
+    board_squares = create_board_squares
 
-    process_mate(color)
+    if color == 'white'
+      delete_useless_squares(white_pieces, board_squares)
+      try_move(white_pieces, color, positions, board_squares)
+    else
+      delete_useless_squares(black_pieces, board_squares)
+      try_move(black_pieces, color, positions, board_squares)
+    end
   end
 
   private
@@ -67,18 +74,5 @@ class Mate
     end
 
     true
-  end
-
-  def process_mate(color)
-    positions = all_positions(white_pieces, black_pieces)
-    board_squares = create_board_squares
-
-    if color == 'white'
-      delete_useless_squares(white_pieces, board_squares)
-      try_move(white_pieces, color, positions, board_squares)
-    else
-      delete_useless_squares(black_pieces, board_squares)
-      try_move(black_pieces, color, positions, board_squares)
-    end
   end
 end

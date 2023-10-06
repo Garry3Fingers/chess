@@ -25,7 +25,7 @@ describe Mate do
 
       it 'returns true' do
         color = 'black'
-        expect(mate.mate?(color)).to be(true)
+        expect(mate.process_mate(color)).to be(true)
       end
     end
 
@@ -47,7 +47,7 @@ describe Mate do
 
       it 'returns false' do
         color = 'black'
-        expect(mate.mate?(color)).to be(false)
+        expect(mate.process_mate(color)).to be(false)
       end
     end
   end
