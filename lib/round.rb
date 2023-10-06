@@ -4,7 +4,7 @@ require_relative 'move'
 
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move, :promote_pawn, :en_passant, :check
+  attr_reader :display_board, :display_move, :promote_pawn, :en_passant, :check, :mate
   attr_accessor :white_pieces, :black_pieces
 
   def initialize(args)
@@ -15,16 +15,17 @@ class Round
     @en_passant = args[:en_passant]
     @promote_pawn = args[:promote_pawn]
     @check = args[:check]
+    @mate = args[:mate]
   end
 
   def play
     print_board
-    return true if check_king(white_pieces, 'Black')
+    return true if checkmate('white')
 
     puts "\nThe white player makes a move."
     player_move(input, white_pieces, black_pieces, 'white')
     print_board
-    return true if check_king(black_pieces, 'White')
+    return true if checkmate('black')
 
     puts "\nThe black player makes a move."
     player_move(input, black_pieces, white_pieces, 'black')
@@ -117,10 +118,10 @@ class Round
     end
   end
 
-  def check_king(pieces, color)
-    return if pieces.key?(:king)
+  def checkmate(color)
+    return false unless mate.mate?(color)
 
-    puts "#{color} player won the match!"
+    puts "Checkmate! #{color.capitalize} player won the match!"
     true
   end
 end
