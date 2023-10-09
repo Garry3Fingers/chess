@@ -28,9 +28,9 @@ class CheckBeforeCastling
 
   def select_positions(color)
     player_pos = if color == 'white'
-                   positions_arr(white_pieces)
+                   positions_hash(white_pieces)
                  else
-                   positions_arr(black_pieces)
+                   positions_hash(black_pieces)
                  end
 
     all_positions = all_positions(white_pieces, black_pieces)
