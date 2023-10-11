@@ -18,4 +18,15 @@ module Positions
     black = positions_arr(black_p)
     white + black
   end
+
+  def positions_hash(pieces)
+    positions = {}
+
+    pieces.each do |key, value|
+      pos = value.position
+      positions[pos.to_sym] = key
+    end
+
+    positions
+  end
 end
