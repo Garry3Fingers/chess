@@ -19,7 +19,7 @@ class CheckBeforeCastling
   def path_is_secure?(move_arr, color)
     positions = select_positions(color)
     return false unless king?(positions[:player_pos], move_arr)
-    return false unless check_path(positions[:all_positions], move_arr)
+    return false unless check_path(positions[:all_positions], move_arr, color)
 
     true
   end
@@ -36,6 +36,14 @@ class CheckBeforeCastling
     all_positions = all_positions(white_pieces, black_pieces)
 
     { player_pos:, all_positions: }
+  end
+
+  def select_pieces(color)
+    if color == 'white'
+      black_pieces
+    else
+      white_pieces
+    end
   end
 
   def find_rook_indexes(move_arr)
@@ -59,7 +67,9 @@ class CheckBeforeCastling
     player_pos[piece_pos] == :king
   end
 
-  def square_under_attack?(square, positions)
+  def square_under_attack?(square, positions, color)
+    pieces_other_player = select_pieces(color)
+
     pieces_other_player.each do |name, piece|
       return true if name.start_with?('pawn') && piece.can_make_move?(square, [square])
       return true if piece.can_make_move?(square, positions)
@@ -68,11 +78,11 @@ class CheckBeforeCastling
     false
   end
 
-  def check_path(positions, move_arr)
-    return false if square_under_attack?(move_arr.last, positions)
+  def check_path(positions, move_arr, color)
+    return false if square_under_attack?(move_arr.last, positions, color)
 
     rook_pos = rook_square(move_arr)
-    return false if square_under_attack?(rook_pos, positions)
+    return false if square_under_attack?(rook_pos, positions, color)
 
     true
   end
