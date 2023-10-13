@@ -24,7 +24,7 @@ class Move
     positions = select_positions(color)
     return false if select_move(move_arr, positions, color)
 
-    del_piece(move_arr.last.to_sym, positions)
+    del_piece(move_arr.last.to_sym, positions, color)
 
     check.after_move(color)
     true
@@ -75,10 +75,14 @@ class Move
     current_player_pieces[positions[:player_pos][start_pos]].change_position(end_pos)
   end
 
-  def del_piece(move, positions)
-    pieces_other_player = positions[:delete_pos]
+  def del_piece(move, positions, color)
+    pieces_other_player = if color == 'white'
+                            black_pieces
+                          else
+                            white_pieces
+                          end
 
-    delete_pos = positions_hash(pieces_other_player)
+    delete_pos = positions[:delete_pos]
     return unless delete_pos.key?(move)
 
     pieces_other_player.delete(delete_pos[move])
@@ -86,6 +90,7 @@ class Move
 
   def check_move(move_arr, positions, color)
     player_pos = positions[:player_pos]
+    all_positions = positions[:all_positions]
     return false if check.before_move(move_arr, color)
     return false if check_before_move(player_pos, move_arr)
     return false if player_pos.include?(move_arr.last.to_sym)
