@@ -9,6 +9,8 @@ require_relative 'promotion_pawn'
 require_relative 'chess'
 require_relative 'check'
 require_relative 'mate'
+require_relative 'move'
+require_relative 'check_before_castling'
 
 # This module helps with initializing the class Chess.
 module ChessWrapper
@@ -22,16 +24,22 @@ module ChessWrapper
     promote_pawn = PromotePawn.new(white_pieces, black_pieces, display_move)
     check = Check.new(white_pieces, black_pieces, en_passant)
     mate = Mate.new(check, white_pieces, black_pieces, en_passant)
+    check_before_castling = CheckBeforeCastling.new(coor_board, white_pieces, black_pieces)
+    move = Move.new({
+                      white_pieces:,
+                      black_pieces:,
+                      check:,
+                      en_passant:,
+                      check_before_castling:
+                    })
 
     {
-      white_pieces:,
-      black_pieces:,
       display_board:,
       display_move:,
-      en_passant:,
       promote_pawn:,
       check:,
-      mate:
+      mate:,
+      move:
     }
   end
 
