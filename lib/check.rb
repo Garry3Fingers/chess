@@ -113,7 +113,6 @@ class Check
       piece.position = move_arr.last
       return true
     end
-
     false
   end
 
@@ -131,8 +130,7 @@ class Check
                       else
                         process_move(move_arr, positions, deep_copy(black_pieces), white_pieces)
                       end
-
-    return if attacking_piece.nil?
+    return false if attacking_piece.nil?
 
     true
   end
