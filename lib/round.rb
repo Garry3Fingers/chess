@@ -4,15 +4,12 @@ require_relative 'move'
 
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move, :promote_pawn, :en_passant, :check, :mate
-  attr_accessor :white_pieces, :black_pieces
+  attr_reader :display_board, :display_move, :promote_pawn, :check, :mate, :move
 
   def initialize(args)
-    @white_pieces = args[:white_pieces]
-    @black_pieces = args[:black_pieces]
     @display_board = args[:display_board]
     @display_move = args[:display_move]
-    @en_passant = args[:en_passant]
+    @move = args[:move]
     @promote_pawn = args[:promote_pawn]
     @check = args[:check]
     @mate = args[:mate]
@@ -20,15 +17,15 @@ class Round
 
   def play
     print_board
-    return true if check_end_game('white', 'black')
+    return true if winner_check('white', 'black')
 
     puts "\nThe white player makes a move."
-    player_move(input, white_pieces, black_pieces, 'white')
+    player_move(input, 'white')
     print_board
-    return true if check_end_game('black', 'white')
+    return true if winner_check('black', 'white')
 
     puts "\nThe black player makes a move."
-    player_move(input, black_pieces, white_pieces, 'black')
+    player_move(input, 'black')
   end
 
   private
@@ -47,8 +44,8 @@ class Round
     display_board.print_board
   end
 
-  def move(pieces, enemy_pieces, move, color)
-    Move.new(pieces, enemy_pieces, en_passant, check).make_move(move, color)
+  def make_move(player_move, color)
+    move.make_move(player_move, color)
   end
 
   def display_pos_change(move, color)
@@ -83,38 +80,38 @@ class Round
     display_move.change_position(move, color)
   end
 
-  def castling(player_move, pieces, enemy_pieces, color)
-    if !perform_castling(pieces, enemy_pieces, player_move, color)
+  def castling(player_move, color)
+    if !perform_castling(player_move, color)
       puts 'You can\'t make an illegal move. Try again!'
-      player_move(input, pieces, enemy_pieces, color)
+      player_move(input, color)
     else
       display_pos_change(player_move, color)
       display_rook_castling(player_move, color)
     end
   end
 
-  def perform_castling(pieces, enemy_pieces, move, color)
-    Move.new(pieces, enemy_pieces, en_passant, check).castling(move, color)
+  def perform_castling(player_move, color)
+    move.castling(player_move, color)
   end
 
-  def standard_move(player_move, pieces, enemy_pieces, color)
-    if !move(pieces, enemy_pieces, player_move, color)
+  def standard_move(player_move, color)
+    if !make_move(player_move, color)
       puts 'You can\'t make an illegal move. Try again!'
-      player_move(input, pieces, enemy_pieces, color)
+      player_move(input, color)
     else
       display_pos_change(player_move, color)
       promote_pawn.promote(player_move.split.last)
     end
   end
 
-  def player_move(player_move, pieces, enemy_pieces, color)
+  def player_move(player_move, color)
     move_arr = player_move.split(' ')
 
     if move_arr.first == 'castling'
       move_arr.shift
-      castling(move_arr.join(' '), pieces, enemy_pieces, color)
+      castling(move_arr.join(' '), color)
     else
-      standard_move(player_move, pieces, enemy_pieces, color)
+      standard_move(player_move, color)
     end
   end
 
@@ -133,7 +130,7 @@ class Round
     true
   end
 
-  def check_end_game(color_check, color_player)
+  def winner_check(color_check, color_player)
     return true if checkmate(color_check, color_player) || stalemate(color_check)
 
     false
