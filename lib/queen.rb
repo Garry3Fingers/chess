@@ -4,6 +4,7 @@ require_relative 'find_bishop_moves'
 require_relative 'find_rook_moves'
 require_relative 'validate_bishop_move'
 require_relative 'validate_rook_move'
+require_relative 'deep_copy'
 
 # This class represents a queen piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
@@ -21,12 +22,14 @@ class Queen
   include FindRookMoves
   include ValidateBishopMove
   include ValidateRookMove
+  include DeepCopy
 
   def change_position(move)
     @position = move
   end
 
   def can_make_move?(move, positions)
+    positions = deep_copy(positions)
     check_queen_positions(move) && check_queen_path(move, positions)
   end
 
