@@ -2,6 +2,7 @@
 
 require 'colorize'
 require_relative 'positions'
+require_relative 'deep_copy'
 
 # This class determines whether there is a king in check.
 class Check
@@ -16,6 +17,7 @@ class Check
   end
 
   include Positions
+  include DeepCopy
 
   def after_move(color)
     @check_color = ''
@@ -75,10 +77,6 @@ class Check
     notify_message(color, attacking_piece)
   end
 
-  def deep_copy(object)
-    Marshal.load(Marshal.dump(object))
-  end
-
   def find_pawn(position, pieces)
     pieces.each do |name, piece|
       return name if piece.position == position
@@ -116,19 +114,19 @@ class Check
     false
   end
 
-  def process_move(move_arr, positions, copy_pieces, real_pieces)
-    return nil unless make_fake_move(copy_pieces, move_arr, positions)
+  def process_move(move_arr, positions, copy_move_pieces, copy_pieces)
+    return nil unless make_fake_move(copy_move_pieces, move_arr, positions)
 
-    new_positions = all_positions(copy_pieces, real_pieces)
-    find_attacking_piece(copy_pieces[:king].position, real_pieces, new_positions)
+    new_positions = all_positions(copy_move_pieces, copy_pieces)
+    find_attacking_piece(copy_move_pieces[:king].position, copy_pieces, new_positions)
   end
 
   def fake_move(move_arr, color)
     positions = all_positions(white_pieces, black_pieces)
     attacking_piece = if color == 'white'
-                        process_move(move_arr, positions, deep_copy(white_pieces), black_pieces)
+                        process_move(move_arr, positions, deep_copy(white_pieces), deep_copy(black_pieces))
                       else
-                        process_move(move_arr, positions, deep_copy(black_pieces), white_pieces)
+                        process_move(move_arr, positions, deep_copy(black_pieces), deep_copy(white_pieces))
                       end
     return false if attacking_piece.nil?
 
