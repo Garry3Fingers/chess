@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'castling'
-require_relative 'attackable_king'
 require_relative 'positions'
 
 # An instance of this class performs one player move on the board.
 # If it's an illegal move, it returns false.
 class Move
-  attr_reader :en_passant, :check, :check_before_castling, :white_pieces, :black_pieces
+  attr_reader :en_passant, :check, :check_before_castling,
+              :white_pieces, :black_pieces, :process_castling
 
   def initialize(args)
     @en_passant = args[:en_passant]
@@ -15,6 +14,7 @@ class Move
     @white_pieces = args[:white_pieces]
     @black_pieces = args[:black_pieces]
     @check_before_castling = args[:check_before_castling]
+    @process_castling = args[:process_castling]
   end
 
   include Positions
@@ -34,8 +34,9 @@ class Move
     move_arr = move.split(' ')
     return false if check.check_color == color
     return false unless check_before_castling.path_is_secure?(move_arr, color)
-    return false unless perform_castling(move_arr, all_positions(white_pieces, black_pieces), color)
+    return false unless process_castling.castling_possible?(move_arr, color)
 
+    process_castling.invoke_castling
     en_passant.pawn_container.clear
     true
   end
@@ -91,9 +92,9 @@ class Move
   def check_move(move_arr, positions, color)
     player_pos = positions[:player_pos]
     all_positions = positions[:all_positions]
-    return false if check.before_move(move_arr, color)
     return false if check_before_move(player_pos, move_arr)
     return false if player_pos.include?(move_arr.last.to_sym)
+    return false if check.before_move(move_arr, color)
     return false unless can_make_move?(move_arr, player_pos, all_positions, color)
 
     true
@@ -118,24 +119,5 @@ class Move
     else
       black_pieces
     end
-  end
-
-  def castling_args(move_arr, positions, color)
-    current_player_pieces = choose_pieces(color)
-
-    rook = if move_arr.first < move_arr.last
-             current_player_pieces[:rook2]
-           else
-             current_player_pieces[:rook1]
-           end
-
-    { rook:,
-      king: current_player_pieces[:king],
-      positions:,
-      move: move_arr.last }
-  end
-
-  def perform_castling(move_arr, positions, color)
-    Castling.new(castling_args(move_arr, positions, color)).perform_castling
   end
 end
