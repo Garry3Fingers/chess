@@ -12,9 +12,11 @@ class Castling
     @move = args[:move]
   end
 
-  def perform_castling
-    return false if can_make_castling? == false
+  def castling_available?
+    first_move? && clear_path? && two_square?
+  end
 
+  def do_castling
     king_pos = king.position
     rook_pos = rook.position
     king.position = move
@@ -102,10 +104,6 @@ class Castling
     return false unless squares == 2
 
     true
-  end
-
-  def can_make_castling?
-    first_move? && clear_path? && two_square?
   end
 
   def rook_position(king_pos, rook_pos)
