@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'coordinate_board'
+require_relative 'deep_copy'
 
 # This class represents a pawn piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
@@ -16,12 +17,15 @@ class Pawn
     @color = color
   end
 
+  include DeepCopy
+
   def change_position(move)
     @first_move = false
     @position = move
   end
 
   def can_make_move?(move, positions)
+    positions = deep_copy(positions)
     diagonal_attack(move, positions) || check_potencial_moves(move) && check_pawn_path(move, positions)
   end
 
