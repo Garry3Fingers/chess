@@ -11,7 +11,7 @@ class WinnerCheck
   end
 
   def stalemate(color)
-    return false if check.check_color == color_check
+    return false if check.check_color == color
     return false unless mate.process_mate(color)
     return false if can_make_castling?(color)
 
