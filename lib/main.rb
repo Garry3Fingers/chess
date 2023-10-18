@@ -11,6 +11,8 @@ require_relative 'check'
 require_relative 'mate'
 require_relative 'move'
 require_relative 'check_before_castling'
+require_relative 'process_castling'
+require_relative 'winner_check'
 
 # This module helps with initializing the class Chess.
 module ChessWrapper
@@ -25,12 +27,15 @@ module ChessWrapper
     check = Check.new(white_pieces, black_pieces, en_passant)
     mate = Mate.new(check, white_pieces, black_pieces, en_passant)
     check_before_castling = CheckBeforeCastling.new(coor_board, white_pieces, black_pieces)
+    process_castling = ProcessCatling.new(white_pieces, black_pieces)
+    winner_check = WinnerCheck.new(check, mate, process_castling)
     move = Move.new({
                       white_pieces:,
                       black_pieces:,
                       check:,
                       en_passant:,
-                      check_before_castling:
+                      check_before_castling:,
+                      process_castling:
                     })
 
     {
@@ -39,7 +44,8 @@ module ChessWrapper
       promote_pawn:,
       check:,
       mate:,
-      move:
+      move:,
+      winner_check:
     }
   end
 
