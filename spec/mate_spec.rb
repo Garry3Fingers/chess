@@ -21,6 +21,7 @@ describe Mate do
 
       before do
         allow(check).to receive(:check_color).and_return('black')
+        allow(en_passant).to receive(:check_en_passant)
       end
 
       it 'returns true' do
@@ -41,8 +42,9 @@ describe Mate do
       subject(:mate) { described_class.new(check, white_pieces, black_pieces, en_passant) }
 
       before do
-        allow(check).to receive(:check_color).and_return('black')
         allow(en_passant).to receive(:check_en_passant).and_return(false)
+        allow(check).to receive(:before_move).and_return(false)
+        allow(check).to receive(:before_en_passant).and_return(false)
       end
 
       it 'returns false' do
