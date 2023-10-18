@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'move'
-
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move, :promote_pawn, :check, :mate, :move
+  attr_reader :display_board, :display_move, :promote_pawn, :check, :mate, :move, :winner_check
 
   def initialize(args)
     @display_board = args[:display_board]
@@ -13,16 +11,17 @@ class Round
     @promote_pawn = args[:promote_pawn]
     @check = args[:check]
     @mate = args[:mate]
+    @winner_check = args[:winner_check]
   end
 
   def play
     print_board
-    return true if winner_check('white', 'black')
+    return true if winner?('white', 'black')
 
     puts "\nThe white player makes a move."
     player_move(input, 'white')
     print_board
-    return true if winner_check('black', 'white')
+    return true if winner?('black', 'white')
 
     puts "\nThe black player makes a move."
     player_move(input, 'black')
@@ -115,23 +114,9 @@ class Round
     end
   end
 
-  def stalemate(color)
-    return false unless mate.process_mate(color)
-
-    puts "Stalemate! It's a draw."
-    true
-  end
-
-  def checkmate(color_check, color_player)
-    return false unless check.check_color == color_check
-    return false unless mate.process_mate(color_check)
-
-    puts "Checkmate! #{color_player.capitalize} player won the match!"
-    true
-  end
-
-  def winner_check(color_check, color_player)
-    return true if checkmate(color_check, color_player) || stalemate(color_check)
+  def winner?(color_check, color_player)
+    return true if winner_check.checkmate(color_check, color_player)
+    return true if winner_check.stalemate(color_check)
 
     false
   end
