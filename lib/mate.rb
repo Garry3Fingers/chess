@@ -59,17 +59,32 @@ class Mate
     en_passant.check_en_passant(move_arr) && check.before_en_passant(move_arr, color)
   end
 
-  def try_make_move(name, piece, square, positions)
+  def choose_pieces(color)
+    if color == 'white'
+      black_pieces
+    else
+      white_pieces
+    end
+  end
+
+  def enemy_position?(color, square)
+    pieces = choose_pieces(color)
+    enemy_pos_arr = positions_arr(pieces)
+    enemy_pos_arr.include?(square)
+  end
+
+  def try_make_move(name, piece, square, positions, color)
     piece.can_make_move?(square, positions) ||
-      (name.start_with?('pawn') && piece.can_make_move?(square, [square]))
+      (name.start_with?('pawn') && enemy_position?(color, square) &&
+      piece.can_make_move?(square, [square]))
   end
 
   def try_move(pieces, color, positions, board_squares)
     pieces.each do |name, piece|
       board_squares.each do |square|
         move_arr = [piece.position, square]
-        next unless try_make_move(name, piece, square, positions)
-        return false unless check.before_move(move_arr, color) || try_en_passant(move_arr, color)
+        next unless try_make_move(name, piece, square, positions, color) || try_en_passant(move_arr, color)
+        return false unless check.before_move(move_arr, color) || check.before_en_passant(move_arr, color)
       end
     end
 
