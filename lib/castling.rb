@@ -23,8 +23,6 @@ class Castling
     king.first_move = false
     rook.position = rook_position(king_pos, rook_pos)
     rook.first_move = false
-
-    true
   end
 
   private
