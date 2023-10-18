@@ -55,10 +55,6 @@ class Mate
     end
   end
 
-  def try_en_passant(move_arr, color)
-    en_passant.check_en_passant(move_arr) && check.before_en_passant(move_arr, color)
-  end
-
   def choose_pieces(color)
     if color == 'white'
       black_pieces
@@ -83,7 +79,7 @@ class Mate
     pieces.each do |name, piece|
       board_squares.each do |square|
         move_arr = [piece.position, square]
-        next unless try_make_move(name, piece, square, positions, color) || try_en_passant(move_arr, color)
+        next unless try_make_move(name, piece, square, positions, color) || en_passant.check_en_passant(move_arr)
         return false unless check.before_move(move_arr, color) || check.before_en_passant(move_arr, color)
       end
     end
