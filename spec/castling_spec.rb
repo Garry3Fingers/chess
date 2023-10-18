@@ -22,33 +22,37 @@ describe Castling do
   subject(:king) { King.new('e1', board) }
   subject(:castling) { described_class.new({ king:, rook:, move:, positions: }) }
 
-  describe '#perform_castling' do
-    context 'when a player can castle' do
-      it 'returns true' do
-        expect(castling.perform_castling).to be(true)
-      end
-
+  describe '#do_castling' do
+    context 'when a player castles' do
       it 'changes the king\'s position to move' do
-        castling.perform_castling
+        castling.do_castling
         expect(king.position).to be('g1')
       end
 
       it 'changes the postion of the rook to behind the king' do
-        castling.perform_castling
+        castling.do_castling
         expect(rook.position).to eq('f1')
       end
 
       it 'changes the status of the first move of the king and rook to false' do
-        castling.perform_castling
+        castling.do_castling
         expect(king.first_move).to be(false)
         expect(rook.first_move).to be(false)
+      end
+    end
+  end
+
+  describe '#castling_available?' do
+    context 'when a player can castle' do
+      it 'returns true' do
+        expect(castling.castling_available?).to be(true)
       end
     end
 
     context 'when a player can\'t castle' do
       it 'returns false' do
         king.instance_variable_set(:@first_move, false)
-        expect(castling.perform_castling).to be(false)
+        expect(castling.do_castling).to be(false)
       end
     end
   end
