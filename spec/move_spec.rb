@@ -2,9 +2,7 @@
 
 require_relative '../lib/move'
 require_relative '../lib/create_pieces'
-require_relative '../lib/king'
-require_relative '../lib/rook'
-require_relative '../lib/coordinate_board'
+
 
 describe Move do
   describe '#make_move' do
