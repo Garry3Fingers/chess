@@ -1,43 +1,36 @@
 # frozen_string_literal: true
 
 require_relative '../lib/round'
-require_relative '../lib/create_pieces'
 
 describe Round do
   describe '#play' do
+    let(:display_board) { double('display board') }
+    let(:display_move) { double('display move') }
+    let(:promote_pawn) { double('promote pawn') }
+    let(:winner_check) { double('winner check') }
+    let(:move) { double('move') }
+    subject(:round) { described_class.new(@args) }
+
+    before(:each) do
+      @args = {
+        display_board:,
+        display_move:,
+        promote_pawn:,
+        winner_check:,
+        move:
+      }
+
+      allow(promote_pawn).to receive(:promote)
+      allow(round).to receive(:puts)
+      allow(display_board).to receive(:print_board)
+      allow(display_move).to receive(:change_position)
+      allow(winner_check).to receive(:checkmate)
+      allow(winner_check).to receive(:stalemate)
+    end
+
     context 'when players make moves' do
-      white_pieces = CreatePieces.new.white_pieces
-      black_pieces = CreatePieces.new.black_pieces
-      let(:display_board) { double('display board') }
-      let(:display_move) { double('display move') }
-      let(:en_passant) { double('en passant') }
-      let(:promote_pawn) { double('promote pawn') }
-      let(:check) { double('check') }
-      let(:mate) { double('mate') }
-      subject(:round) { described_class.new(@args) }
-
       before do
-        @args = {
-          white_pieces:,
-          black_pieces:,
-          display_board:,
-          display_move:,
-          en_passant:,
-          promote_pawn:,
-          check:,
-          mate:
-        }
-
-        allow(en_passant).to receive(:look_for_pawn)
-        allow(en_passant).to receive(:check_en_passant)
-        allow(promote_pawn).to receive(:promote)
-        allow(round).to receive(:puts)
-        allow(display_board).to receive(:print_board)
-        allow(display_move).to receive(:change_position)
-        allow(check).to receive(:before_move)
-        allow(check).to receive(:after_move)
-        allow(check).to receive(:check_color)
-        allow(mate).to receive(:process_mate)
+        allow(move).to receive(:make_move).and_return(true)
         allow(round).to receive(:gets).and_return('a2 a4', 'a7 a5', 'b1 c3', 'b8 c6')
       end
 
@@ -50,94 +43,29 @@ describe Round do
         expect(display_move).to receive(:change_position).twice
         round.play
       end
-
-      it 'has an updated hash with pieces' do
-        expect(round.white_pieces[:pawn1].position).to eq('a4')
-      end
     end
 
     context 'when a player makes an illegal move once' do
-      white_pieces = CreatePieces.new.white_pieces
-      black_pieces = CreatePieces.new.black_pieces
-      let(:display_board) { double('display board') }
-      let(:display_move) { double('display move') }
-      let(:en_passant) { double('en passant') }
-      let(:promote_pawn) { double('promote pawn') }
-      let(:check) { double('check') }
-      let(:mate) { double('mate') }
-      subject(:round) { described_class.new(@args) }
-
       before do
-        @args = {
-          white_pieces:,
-          black_pieces:,
-          display_board:,
-          display_move:,
-          en_passant:,
-          promote_pawn:,
-          check:,
-          mate:
-        }
-
-        allow(en_passant).to receive(:look_for_pawn)
-        allow(en_passant).to receive(:check_en_passant)
-        allow(promote_pawn).to receive(:promote)
-        allow(display_board).to receive(:print_board)
-        allow(display_move).to receive(:change_position)
-        allow(check).to receive(:before_move)
-        allow(check).to receive(:after_move)
-        allow(check).to receive(:check_color)
-        allow(mate).to receive(:process_mate)
-        allow(round).to receive(:puts)
+        allow(move).to receive(:make_move).and_return(false, true, true)
         allow(round).to receive(:gets).and_return('a2 a5', 'a2 a4', 'a7 a5')
       end
 
-      it 'receives a message once' do
+      it 'puts a message once' do
         message = 'You can\'t make an illegal move. Try again!'
         expect(round).to receive(:puts).with(message).once
         round.play
       end
     end
 
-    context 'when the player wins the game or it\'s a draw' do
-      white_pieces = CreatePieces.new.white_pieces
-      black_pieces = CreatePieces.new.black_pieces
-      let(:display_board) { double('display board') }
-      let(:display_move) { double('display move') }
-      let(:en_passant) { double('en passant') }
-      let(:promote_pawn) { double('promote pawn') }
-      let(:check) { double('check') }
-      let(:mate) { double('mate') }
-      subject(:round) { described_class.new(@args) }
-
+    context 'when the game is over' do
       before do
-        @args = {
-          white_pieces:,
-          black_pieces:,
-          display_board:,
-          display_move:,
-          en_passant:,
-          promote_pawn:,
-          check:,
-          mate:
-        }
-
-        allow(display_board).to receive(:print_board)
-        allow(mate).to receive(:process_mate).and_return(true)
+        allow(move).to receive(:make_move).and_return(true)
+        allow(winner_check).to receive(:checkmate).and_return(true)
       end
 
-      it 'puts a checkmate message' do
-        allow(check).to receive(:check_color).and_return('white')
-        message = 'Checkmate! Black player won the match!'
-        expect(round).to receive(:puts).with(message).once
-        round.play
-      end
-
-      it 'puts a stalemate message' do
-        allow(check).to receive(:check_color)
-        message = 'Stalemate! It\'s a draw.'
-        expect(round).to receive(:puts).with(message).once
-        round.play
+      it 'returns true' do
+        expect(round.play).to be(true)
       end
     end
   end
