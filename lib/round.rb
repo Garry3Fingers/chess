@@ -2,14 +2,13 @@
 
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move, :promote_pawn, :check, :mate, :move, :winner_check
+  attr_reader :display_board, :display_move, :promote_pawn, :mate, :move, :winner_check
 
   def initialize(args)
     @display_board = args[:display_board]
     @display_move = args[:display_move]
     @move = args[:move]
     @promote_pawn = args[:promote_pawn]
-    @check = args[:check]
     @mate = args[:mate]
     @winner_check = args[:winner_check]
   end
