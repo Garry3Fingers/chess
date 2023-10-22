@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'coordinate_board'
+require_relative 'row_column_index'
 
 # This class represents a knight piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
@@ -14,6 +14,8 @@ class Knight
     @board = board
   end
 
+  include RowColumnIndex
+
   def change_position(move)
     self.position = move
   end
@@ -25,17 +27,6 @@ class Knight
   end
 
   private
-
-  def row_index(location)
-    board.index { |arr| arr.include?(location) }
-  end
-
-  def column_index(location)
-    board.each do |arr|
-      column = arr.index(location)
-      return column unless column.nil?
-    end
-  end
 
   def add_potencial_moves(row, column)
     [

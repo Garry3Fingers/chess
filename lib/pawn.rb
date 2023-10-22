@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'coordinate_board'
+require_relative 'row_column_index'
 require_relative 'deep_copy'
 
 # This class represents a pawn piece from a chess game.
@@ -17,6 +17,7 @@ class Pawn
     @color = color
   end
 
+  include RowColumnIndex
   include DeepCopy
 
   def change_position(move)
@@ -30,17 +31,6 @@ class Pawn
   end
 
   private
-
-  def row_index(location)
-    board.index { |arr| arr.include?(location) }
-  end
-
-  def column_index(location)
-    board.each do |arr|
-      column = arr.index(location)
-      return column unless column.nil?
-    end
-  end
 
   def white(moves, row, column)
     moves << [row - 2, column] if first_move == true

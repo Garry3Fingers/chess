@@ -2,6 +2,7 @@
 
 require_relative 'display_board'
 require_relative 'coordinate_board'
+require_relative 'row_column_index'
 
 # This class changes the positions of the pieces on the display board.
 class DisplayMove
@@ -13,6 +14,8 @@ class DisplayMove
     @board = c_board
     @display_board = d_board
   end
+
+  include RowColumnIndex
 
   def change_position(move, color)
     move = move.split(' ')
@@ -47,17 +50,6 @@ class DisplayMove
   end
 
   private
-
-  def row_index(location)
-    board.index { |arr| arr.include?(location) }
-  end
-
-  def column_index(location)
-    board.each do |arr|
-      column = arr.index(location)
-      return column unless column.nil?
-    end
-  end
 
   def find_square(move)
     [row_index(move), column_index(move)]

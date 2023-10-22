@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'coordinate_board'
+require_relative 'row_column_index'
 
 # This class represents a king piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
@@ -15,6 +15,8 @@ class King
     @first_move = true
   end
 
+  include RowColumnIndex
+
   def change_position(move)
     self.position = move
     self.first_move = false
@@ -25,17 +27,6 @@ class King
   end
 
   private
-
-  def row_index(location)
-    board.index { |arr| arr.include?(location) }
-  end
-
-  def column_index(location)
-    board.each do |arr|
-      column = arr.index(location)
-      return column unless column.nil?
-    end
-  end
 
   def add_potencial_moves(row, column)
     [
