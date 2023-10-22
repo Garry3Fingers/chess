@@ -19,6 +19,11 @@ describe Rook do
 
   describe '#change_position' do
     context 'when a player makes a move' do
+      it 'change @first_move to fasle' do
+        rook.change_position('c1')
+        expect(rook.first_move).to be(false)
+      end
+
       it 'changes position' do
         rook.change_position('d1')
         expect(rook.position).to eq('d1')
