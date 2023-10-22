@@ -20,8 +20,8 @@ class Pawn
   include DeepCopy
 
   def change_position(move)
-    @first_move = false
-    @position = move
+    self.first_move = false
+    self.position = move
   end
 
   def can_make_move?(move, positions)
