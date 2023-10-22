@@ -16,8 +16,8 @@ class King
   end
 
   def change_position(move)
-    @position = move
-    @first_move = false
+    self.position = move
+    self.first_move = false
   end
 
   def can_make_move?(move, _pos)
