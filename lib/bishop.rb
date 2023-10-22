@@ -23,7 +23,7 @@ class Bishop
   include RowColumnIndex
 
   def change_position(move)
-    @position = move
+    self.position = move
   end
 
   def can_make_move?(move, positions)
