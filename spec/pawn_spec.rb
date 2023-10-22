@@ -18,9 +18,14 @@ describe Pawn do
 
   describe '#change_position' do
     context 'when a player makes a move' do
-      it 'changes position' do
+      it 'change @first_move to fasle' do
         pawn.change_position('f3')
-        expect(pawn.position).to eq('f3')
+        expect(pawn.first_move).to be(false)
+      end
+
+      it 'changes position' do
+        pawn.change_position('f4')
+        expect(pawn.position).to eq('f4')
       end
     end
   end
