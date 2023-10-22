@@ -18,6 +18,11 @@ describe King do
 
   describe '#change_position' do
     context 'when a player makes a move' do
+      it 'change @first_move to fasle' do
+        king.change_position('e7')
+        expect(king.first_move).to be(false)
+      end
+
       it 'changes position' do
         king.change_position('d7')
         expect(king.position).to eq('d7')
