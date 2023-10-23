@@ -54,26 +54,31 @@ class Pawn < Piece
     moves
   end
 
-  def check_top_diagonals(move)
-    [
-      "#{(position[0].ord - 1).chr}#{position[1].next}",
-      "#{position[0].next}#{position[1].next}"
-    ].include?(move)
+  def check_top_diagonals(move_coordinate, position_coordinate)
+    diagonal_positions = [
+      [position_coordinate[0] - 1, position_coordinate[1] - 1],
+      [position_coordinate[0] - 1, position_coordinate[1] + 1]
+    ]
+    diagonal_positions.include?(move_coordinate)
   end
 
-  def check_bottom_diagonals(move)
-    [
-      "#{(position[0].ord - 1).chr}#{(position[1].ord - 1).chr}",
-      "#{position[0].next}#{(position[1].ord - 1).chr}"
-    ].include?(move)
+  def check_bottom_diagonals(move_coordinate, position_coordinate)
+    diagonal_positions = [
+      [position_coordinate[0] + 1, position_coordinate[1] - 1],
+      [position_coordinate[0] + 1, position_coordinate[1] + 1]
+    ]
+    diagonal_positions.include?(move_coordinate)
   end
 
   def diagonal_attack(move, positions)
     return false unless positions.include?(move)
 
-    if color == 'white' && check_top_diagonals(move)
+    move_coordinate = [row_index(move), column_index(move)]
+    position_coordinate = [row_index(position), column_index(position)]
+
+    if color == 'white' && check_top_diagonals(move_coordinate, position_coordinate)
       true
-    elsif color == 'black' && check_bottom_diagonals(move)
+    elsif color == 'black' && check_bottom_diagonals(move_coordinate, position_coordinate)
       true
     end
   end
