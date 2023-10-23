@@ -1,25 +1,21 @@
 # frozen_string_literal: true
 
-require_relative 'row_column_index'
+require_relative 'piece'
 
 # This class represents a king piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
 # And if it can, it changes the current position.
-class King
-  attr_reader :board
-  attr_accessor :position, :first_move
+class King < Piece
+  attr_accessor :first_move
 
   def initialize(position, board)
-    @position = position
-    @board = board
+    super(position, board)
     @first_move = true
   end
 
-  include RowColumnIndex
-
   def change_position(move)
-    self.position = move
     self.first_move = false
+    super
   end
 
   def can_make_move?(move, _pos)

@@ -1,28 +1,26 @@
 # frozen_string_literal: true
 
-require_relative 'row_column_index'
+require_relative 'piece'
 require_relative 'deep_copy'
 
 # This class represents a pawn piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
 # And if it can, it changes the current position.
-class Pawn
-  attr_reader :board, :color
-  attr_accessor :position, :first_move
+class Pawn < Piece
+  attr_reader :color
+  attr_accessor :first_move
 
   def initialize(position, board, color)
-    @position = position
-    @board = board
+    super(position, board)
     @first_move = true
     @color = color
   end
 
-  include RowColumnIndex
   include DeepCopy
 
   def change_position(move)
     self.first_move = false
-    self.position = move
+    super
   end
 
   def can_make_move?(move, positions)

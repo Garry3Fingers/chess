@@ -1,25 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'row_column_index'
+require_relative 'piece'
 
 # This class represents a knight piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
 # And if it can, it changes the current position.
-class Knight
-  attr_reader :board
-  attr_accessor :position
-
-  def initialize(position, board)
-    @position = position
-    @board = board
-  end
-
-  include RowColumnIndex
-
-  def change_position(move)
-    self.position = move
-  end
-
+class Knight < Piece
   def can_make_move?(move, _pos)
     pontecial_moves = add_potencial_moves(row_index(position), column_index(position))
     destination_coordinate = [row_index(move), column_index(move)]

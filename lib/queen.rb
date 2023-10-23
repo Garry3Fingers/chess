@@ -5,30 +5,17 @@ require_relative 'find_rook_moves'
 require_relative 'validate_bishop_move'
 require_relative 'validate_rook_move'
 require_relative 'deep_copy'
-require_relative 'row_column_index'
+require_relative 'piece'
 
 # This class represents a queen piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
 # And if it can, it changes the current position.
-class Queen
-  attr_reader :board
-  attr_accessor :position
-
-  def initialize(position, board)
-    @position = position
-    @board = board
-  end
-
+class Queen < Piece
   include FindBishopMoves
   include FindRookMoves
   include ValidateBishopMove
   include ValidateRookMove
   include DeepCopy
-  include RowColumnIndex
-
-  def change_position(move)
-    self.position = move
-  end
 
   def can_make_move?(move, positions)
     positions = deep_copy(positions)

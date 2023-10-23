@@ -3,28 +3,16 @@
 require_relative 'validate_bishop_move'
 require_relative 'find_bishop_moves'
 require_relative 'deep_copy'
-require_relative 'row_column_index'
+require_relative 'piece'
+# require_relative 'row_column_index'
 
 # This class represents a bishop piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
 # And if it can, it changes the current position.
-class Bishop
-  attr_reader :board
-  attr_accessor :position
-
-  def initialize(position, board)
-    @position = position
-    @board = board
-  end
-
+class Bishop < Piece
   include FindBishopMoves
   include ValidateBishopMove
   include DeepCopy
-  include RowColumnIndex
-
-  def change_position(move)
-    self.position = move
-  end
 
   def can_make_move?(move, positions)
     positions = deep_copy(positions)

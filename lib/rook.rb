@@ -3,29 +3,26 @@
 require_relative 'validate_rook_move'
 require_relative 'find_rook_moves'
 require_relative 'deep_copy'
-require_relative 'row_column_index'
+require_relative 'piece'
 
 # This class represents a rook piece from a chess game.
 # It has a current position. It also checks if the piece can make a move.
 # And if it can, it changes the current position.
-class Rook
-  attr_reader :board
-  attr_accessor :position, :first_move
+class Rook < Piece
+  attr_accessor :first_move
 
   def initialize(position, board)
-    @position = position
-    @board = board
+    super(position, board)
     @first_move = true
   end
 
   include FindRookMoves
   include ValidateRookMove
   include DeepCopy
-  include RowColumnIndex
 
   def change_position(move)
-    self.position = move
     self.first_move = false
+    super
   end
 
   def can_make_move?(move, positions)
