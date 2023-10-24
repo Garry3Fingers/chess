@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require_relative 'save_game'
+
 # This class implements one round of the game.
 class Round
-  attr_reader :display_board, :display_move, :promote_pawn, :mate, :move, :winner_check
+  attr_reader :display_board, :display_move, :promote_pawn, :mate, :move, :winner_check, :args
+  attr_accessor :color
 
   def initialize(args)
     @display_board = args[:display_board]
@@ -11,19 +14,23 @@ class Round
     @promote_pawn = args[:promote_pawn]
     @mate = args[:mate]
     @winner_check = args[:winner_check]
+    @args = args
+    @color = args[:color] || 'white'
+  end
+
+  def print_board
+    display_board.print_board
   end
 
   def play
-    print_board
-    return true if winner?('white', 'black')
-
-    puts "\nThe white player makes a move."
-    player_move(input, 'white')
-    print_board
-    return true if winner?('black', 'white')
-
-    puts "\nThe black player makes a move."
-    player_move(input, 'black')
+    case color
+    when 'white'
+      white_move
+      return true if winner?('black', 'white')
+    when 'black'
+      black_move
+      return true if winner?('white', 'black')
+    end
   end
 
   private
@@ -31,15 +38,11 @@ class Round
   def input
     input = ''
 
-    until /(castling )?[a-h][1-8] [a-h][1-8]/.match?(input)
+    until /(castling )?[a-h][1-8] [a-h][1-8]|[save]/.match?(input)
       puts "\nEnter the position of the piece to move.\nAnd after the space, the place where to move the piece."
       input = gets.chomp
     end
     input
-  end
-
-  def print_board
-    display_board.print_board
   end
 
   def make_move(player_move, color)
@@ -50,32 +53,18 @@ class Round
     display_move.change_position(move, color)
   end
 
-  def rook_move_left(color, move)
-    if color == 'white'
-      ['h1', "#{(move[0].ord - 1).chr}#{move[1]}"].join(' ')
-    else
-      ['h8', "#{(move[0].ord - 1).chr}#{move[1]}"].join(' ')
-    end
+  def white_move
+    puts "\nThe white player makes a move."
+    player_move(input, 'white')
+    print_board
+    self.color = 'black'
   end
 
-  def rook_move_right(color, move)
-    if color == 'white'
-      ['a1', "#{move[0].next}#{move[1]}"].join(' ')
-    else
-      ['a8', "#{move[0].next}#{move_arr[1]}"].join(' ')
-    end
-  end
-
-  def display_rook_castling(player_move, color)
-    move_arr = player_move.split(' ')
-
-    move = if move_arr.first < move_arr.last
-             rook_move_left(color, move_arr.last)
-           else
-             rook_move_right(color, move_arr.last)
-           end
-
-    display_move.change_position(move, color)
+  def black_move
+    puts "\nThe black player makes a move."
+    player_move(input, 'black')
+    print_board
+    self.color = 'white'
   end
 
   def castling(player_move, color)
@@ -84,7 +73,6 @@ class Round
       player_move(input, color)
     else
       display_pos_change(player_move, color)
-      display_rook_castling(player_move, color)
     end
   end
 
@@ -105,7 +93,10 @@ class Round
   def player_move(player_move, color)
     move_arr = player_move.split(' ')
 
-    if move_arr.first == 'castling'
+    if move_arr.first == 'save'
+      save_game(args)
+      player_move(input, color)
+    elsif move_arr.first == 'castling'
       move_arr.shift
       castling(move_arr.join(' '), color)
     else
@@ -118,5 +109,10 @@ class Round
     return true if winner_check.stalemate(color_check)
 
     false
+  end
+
+  def save_game(data)
+    data[:color] = color
+    SaveGame.new(data).save
   end
 end
