@@ -37,6 +37,7 @@ class Move
     return false unless process_castling.castling_possible?(move_arr, color)
 
     process_castling.invoke_castling
+    process_castling.display_rook_castling(move_arr, color)
     en_passant.pawn_container.clear
     true
   end
