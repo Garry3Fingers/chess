@@ -27,7 +27,7 @@ module ChessWrapper
     check = Check.new(white_pieces, black_pieces, en_passant)
     mate = Mate.new(check, white_pieces, black_pieces, en_passant)
     check_before_castling = CheckBeforeCastling.new(coor_board, white_pieces, black_pieces)
-    process_castling = ProcessCatling.new(white_pieces, black_pieces)
+    process_castling = ProcessCatling.new(white_pieces, black_pieces, display_move)
     winner_check = WinnerCheck.new(check, mate, process_castling)
     move = Move.new({
                       white_pieces:,
