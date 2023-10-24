@@ -6,13 +6,15 @@ require_relative 'positions'
 # This class prepares args for the Castling class. Then the Castling class is created.
 # This class then sends a #castling_available? message to the Castling class.
 # If true, a #do_castling message is sent.
+# #display_rook_castling helps with visually updating the board.
 class ProcessCatling
-  attr_reader :white_pieces, :black_pieces
+  attr_reader :white_pieces, :black_pieces, :display_move
   attr_accessor :castling
 
-  def initialize(white_pieces, black_pieces)
+  def initialize(white_pieces, black_pieces, display_move)
     @white_pieces = white_pieces
     @black_pieces = black_pieces
+    @display_move = display_move
     @castling = nil
   end
 
@@ -25,6 +27,16 @@ class ProcessCatling
 
   def invoke_castling
     castling.do_castling
+  end
+
+  def display_rook_castling(move_arr, color)
+    move = if move_arr.first < move_arr.last
+             rook_move_left(color, move_arr.last)
+           else
+             rook_move_right(color, move_arr.last)
+           end
+
+    display_move.change_position(move, color)
   end
 
   private
@@ -56,5 +68,21 @@ class ProcessCatling
       king: current_player_pieces[:king],
       positions:,
       move: move_arr.last }
+  end
+
+  def rook_move_left(color, move)
+    if color == 'white'
+      ['h1', "#{(move[0].ord - 1).chr}#{move[1]}"].join(' ')
+    else
+      ['h8', "#{(move[0].ord - 1).chr}#{move[1]}"].join(' ')
+    end
+  end
+
+  def rook_move_right(color, move)
+    if color == 'white'
+      ['a1', "#{move[0].next}#{move[1]}"].join(' ')
+    else
+      ['a8', "#{move[0].next}#{move_arr[1]}"].join(' ')
+    end
   end
 end
