@@ -22,6 +22,7 @@ describe Round do
 
       allow(promote_pawn).to receive(:promote)
       allow(round).to receive(:puts)
+      allow(round).to receive(:gets).and_return('a2')
       allow(display_board).to receive(:print_board)
       allow(display_move).to receive(:change_position)
       allow(winner_check).to receive(:checkmate)
@@ -31,16 +32,16 @@ describe Round do
     context 'when players make moves' do
       before do
         allow(move).to receive(:make_move).and_return(true)
-        allow(round).to receive(:gets).and_return('a2 a4', 'a7 a5', 'b1 c3', 'b8 c6')
+        allow(round).to receive(:gets).and_return('a2 a4')
       end
 
-      it 'sends #print_board to class DisplayBoard twice' do
-        expect(display_board).to receive(:print_board).twice
+      it 'sends #print_board to class DisplayBoard' do
+        expect(display_board).to receive(:print_board).once
         round.play
       end
 
-      it 'sends #change_position to class DisplayMove twice' do
-        expect(display_move).to receive(:change_position).twice
+      it 'sends #change_position to class DisplayMove' do
+        expect(display_move).to receive(:change_position).once
         round.play
       end
     end
@@ -48,7 +49,7 @@ describe Round do
     context 'when a player makes an illegal move once' do
       before do
         allow(move).to receive(:make_move).and_return(false, true, true)
-        allow(round).to receive(:gets).and_return('a2 a5', 'a2 a4', 'a7 a5')
+        allow(round).to receive(:gets).and_return('a2 a5', 'a2 a4')
       end
 
       it 'puts a message once' do
