@@ -80,6 +80,7 @@ describe Move do
         allow(check_before_castling).to receive(:path_is_secure?).and_return(true)
         allow(process_castling).to receive(:castling_possible?).and_return(true)
         allow(process_castling).to receive(:invoke_castling)
+        allow(process_castling).to receive(:display_rook_castling)
         allow(en_passant).to receive(:pawn_container).and_return({})
       end
 
