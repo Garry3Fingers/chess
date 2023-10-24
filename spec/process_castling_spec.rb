@@ -6,7 +6,8 @@ require_relative '../lib/create_pieces'
 describe ProcessCatling do
   white_pieces = CreatePieces.new.white_pieces
   black_pieces = CreatePieces.new.black_pieces
-  subject(:process_castling) { described_class.new(white_pieces, black_pieces) }
+  let(:display_move) { double('display move') }
+  subject(:process_castling) { described_class.new(white_pieces, black_pieces, display_move) }
 
   describe '#castling_possible?' do
     context 'when castling is possible' do
@@ -16,7 +17,7 @@ describe ProcessCatling do
         black_pieces.delete(:knight1)
         move_arr = %w[e8 c8]
         color = 'black'
-        expect(subject.castling_possible?(move_arr, color)).to be(true)
+        expect(process_castling.castling_possible?(move_arr, color)).to be(true)
       end
     end
 
@@ -24,7 +25,7 @@ describe ProcessCatling do
       it 'returns false' do
         move_arr = %w[e1 c1]
         color = 'white'
-        expect(subject.castling_possible?(move_arr, color)).to be(false)
+        expect(process_castling.castling_possible?(move_arr, color)).to be(false)
       end
     end
   end
@@ -34,8 +35,17 @@ describe ProcessCatling do
       move_arr = %w[e1 c1]
       color = 'white'
       subject.castling_possible?(move_arr, color)
-      expect(subject.castling).to receive(:do_castling)
-      subject.invoke_castling
+      expect(process_castling.castling).to receive(:do_castling)
+      process_castling.invoke_castling
+    end
+  end
+
+  describe '#display_rook_castling' do
+    it 'sends #change_position' do
+      move_arr = %w[e1 g1]
+      color = 'white'
+      expect(display_move).to receive(:change_position)
+      process_castling.display_rook_castling(move_arr, color)
     end
   end
 end
